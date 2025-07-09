@@ -8,12 +8,16 @@ import {
   ArrowLeftStartOnRectangleIcon,
   ShoppingCartIcon,
 } from "@heroicons/react/24/solid";
+import { useProducts } from "../hooks/useProducts";
+import { useCart } from "../hooks/useCart";
 
 const Navbar = () => {
   const auth = useSelector((state: RootState) => state.auth);
   const cart = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  useProducts();
+  useCart();
 
   useEffect(() => {
     const users = {
