@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 import api from "../services/api";
 import { useEffect, useState } from "react";
+import { useAuthRedirect } from "../hooks/useAuthRedirect";
 
 interface Order {
   id: number;
@@ -9,12 +10,14 @@ interface Order {
 }
 
 const Orders = () => {
+  useAuthRedirect();
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
     const fetchOrders = async () => {
       const res = await api.get("/orders");
       setOrders(res.data);
+      localStorage.removeItem("orderSuccess");
     };
     fetchOrders();
   }, []);

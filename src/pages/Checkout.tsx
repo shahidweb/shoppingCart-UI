@@ -5,15 +5,16 @@ import { toast } from "react-toastify";
 import { clearCart } from "../redux/slices/cartSlice";
 import type { RootState } from "../redux/store";
 import api from "../services/api";
+import { useAuthRedirect } from "../hooks/useAuthRedirect";
 
 const Checkout = () => {
+  useAuthRedirect();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart.items);
   const [address, setAddress] = useState("");
   const [card, setCard] = useState("");
 
-  console.log(cart)
 
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,10 +29,6 @@ const Checkout = () => {
         quantity: item.quantity,
         price: item.price,
       }));
-
-      const body = { address, card, total, items };
-      console.log(body);
-
       const res = await api.post("/orders", {
         address,
         card,
@@ -42,6 +39,7 @@ const Checkout = () => {
 
       toast.success("Order placed successfully");
       dispatch(clearCart());
+      localStorage.setItem("orderSuccess", "true");
       navigate("/order-success");
     } catch (err) {
       console.error(err);
