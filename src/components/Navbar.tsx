@@ -31,10 +31,7 @@ const Navbar = () => {
           ? JSON.parse(localStorage.getItem(AuthStorageKeys.user) || "{}")
           : null,
     };
-    if (!users.token || !users.user) {
-      handleLogout();
-      return;
-    }
+    if(!(users.token || users.user)) return
     dispatch(setCredentials(users));
   }, []);
 
@@ -68,7 +65,7 @@ const Navbar = () => {
               </span>
             </Link>
             <button
-              onClick={handleLogout}
+              onClick={() => handleLogout()}
               className="hover:underline text-red-300 cursor-pointer"
             >
               {/* Logout */}

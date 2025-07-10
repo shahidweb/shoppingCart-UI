@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setProducts } from "../redux/slices/productSlice";
+import type { RootState } from "../redux/store";
 import api from "../services/api";
 import { URLEndPoint } from "../shared/auth-modal";
-import type { RootState } from "../redux/store";
 
 export function useProducts() {
   const dispatch = useDispatch();

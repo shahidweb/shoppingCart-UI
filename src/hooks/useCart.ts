@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCart } from "../redux/slices/cartSlice";
+import type { RootState } from "../redux/store";
 import api from "../services/api";
 import { URLEndPoint } from "../shared/auth-modal";
-import type { RootState } from "../redux/store";
 
 export function useCart() {
   const dispatch = useDispatch();
