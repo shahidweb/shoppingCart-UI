@@ -1,11 +1,7 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/home";
-import Cart from "./pages/cart";
-import Login from "./pages/login";
-import Register from "./pages/register";
-import Navbar from "./components/Navbar";
-import ProductDetails from "./pages/ProductDetails";
+import { BrowserRouter } from "react-router-dom";
 import { Slide, ToastContainer } from "react-toastify";
+import Navbar from "./components/Navbar";
+import Navigation from "./routes/Navigation";
 
 const App = () => {
   return (
@@ -17,13 +13,7 @@ const App = () => {
         hideProgressBar={true}
         transition={Slide}
       />
-      <Routes>
-        <Route index path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
-      </Routes>
+      <Navigation />
     </BrowserRouter>
   );
 };

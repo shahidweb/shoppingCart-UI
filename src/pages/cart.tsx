@@ -1,7 +1,7 @@
 import { HeartIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import QuantityControls from "../components/QuantityControls";
 import { setCart } from "../redux/slices/cartSlice";
 import type { RootState } from "../redux/store";
@@ -14,6 +14,7 @@ const Cart = () => {
   const products = useSelector((state: RootState) => state.products.items);
   const dispatch = useDispatch();
   const [items, setItems] = useState<any[]>([]);
+  const navigation = useNavigate();
 
   const removeItem = async (id: number) => {
     await api.delete(`${URLEndPoint.cart}/${id}`);
@@ -138,7 +139,10 @@ const Cart = () => {
               <span>Total</span>
               <span>₹{totalRounded.toLocaleString("en-IN")}.00</span>
             </div>
-            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded font-semibold cursor-pointer">
+            <button
+              onClick={() => navigation(URLEndPoint.checkout)}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded font-semibold cursor-pointer"
+            >
               Proceed to Checkout
             </button>
             <Link

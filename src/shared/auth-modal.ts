@@ -5,6 +5,7 @@ export const URLEndPoint = {
   products: "/products",
   product: "/product",
   cart: "/cart",
+  checkout:"/checkout"
 };
 
 export const AuthStorageKeys = {
