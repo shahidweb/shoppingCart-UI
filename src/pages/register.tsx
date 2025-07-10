@@ -3,6 +3,10 @@ import { useDispatch } from "react-redux";
 import { setCredentials } from "../redux/slices/authSlice";
 import api from "../services/api";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { NotificationMsg } from "../shared/notification-modal";
+import { AuthStorageKeys, URLEndPoint } from "../shared/auth-modal";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -14,18 +18,22 @@ const Register = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await api.post("/register", { username, email, password });
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      const res = await api.post(URLEndPoint.register, {
+        username,
+        email,
+        password,
+      });
+      localStorage.setItem(AuthStorageKeys.token, res.data.token);
+      localStorage.setItem(AuthStorageKeys.user, JSON.stringify(res.data.user));
       dispatch(setCredentials(res.data));
-      navigate("/");
-    } catch (err) {
-      alert("Registration failed");
+      navigate(URLEndPoint.home);
+      toast.success(NotificationMsg.RegistrationSuccess);
+    } catch (err: any) {
+      toast.error(err.response.data.message || NotificationMsg.LoginFailed);
     }
   };
 
   return (
-    
     <div className="flex" style={{ minHeight: "calc(100vh - 3.3rem)" }}>
       {/* Left Side Form */}
       <div className="w-full md:w-1/2 flex flex-col justify-center px-8 md:px-24 lg:px-32">
@@ -36,12 +44,12 @@ const Register = () => {
           </h2>
           <p className="text-sm text-gray-600 mb-6">
             Already a member?{" "}
-            <a
-              className="text-blue-600 hover:underline cursor-pointer"
-              onClick={() => navigate("/login")}
+            <Link
+              to={URLEndPoint.login}
+              className="text-blue-600 hover:underline"
             >
               Sign in
-            </a>
+            </Link>
           </p>
           <form onSubmit={handleRegister} className="space-y-5">
             <div>

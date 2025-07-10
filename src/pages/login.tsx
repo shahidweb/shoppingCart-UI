@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { setCredentials } from "../redux/slices/authSlice";
 import api from "../services/api";
-import { useNavigate } from "react-router-dom";
+import { AuthStorageKeys, URLEndPoint } from "../shared/auth-modal";
+import { NotificationMsg } from "../shared/notification-modal";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -13,13 +17,14 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await api.post("/login", { email, password });
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      const res = await api.post(URLEndPoint.login, { email, password });
+      localStorage.setItem(AuthStorageKeys.token, res.data.token);
+      localStorage.setItem(AuthStorageKeys.user, JSON.stringify(res.data.user));
       dispatch(setCredentials(res.data));
-      navigate("/");
-    } catch (err) {
-      alert("Invalid email or password");
+      navigate(URLEndPoint.home);
+      toast.success(NotificationMsg.loginSuccess);
+    } catch (err: any) {
+      toast.error(err.response.data.message || NotificationMsg.invalidCred);
     }
   };
 
@@ -34,12 +39,12 @@ const Login = () => {
           </h2>
           <p className="text-sm text-gray-600 mb-6">
             Not a member?{" "}
-            <a
+            <Link
+              to={URLEndPoint.register}
               className="text-blue-600 hover:underline"
-              onClick={() => navigate("/register")}
             >
               Sign up
-            </a>
+            </Link>
           </p>
           <form onSubmit={handleSubmit} className="space-y-5 mt-8">
             <div>

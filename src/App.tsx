@@ -1,20 +1,19 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/home";
-import Cart from "./pages/cart";
-import Login from "./pages/login";
-import Register from "./pages/register";
+import { BrowserRouter } from "react-router-dom";
+import { Slide, ToastContainer } from "react-toastify";
 import Navbar from "./components/Navbar";
+import Navigation from "./routes/Navigation";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Navbar />
-      <Routes>
-        <Route index path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/cart" element={<Cart />} />
-      </Routes>
+      <ToastContainer
+        theme="colored"
+        autoClose={500}
+        hideProgressBar={true}
+        transition={Slide}
+      />
+      <Navigation />
     </BrowserRouter>
   );
 };
