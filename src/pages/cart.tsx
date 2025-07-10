@@ -7,7 +7,7 @@ import { setCart } from "../redux/slices/cartSlice";
 import type { RootState } from "../redux/store";
 import api from "../services/api";
 import { calculateCartSummary } from "../shared/CartCal";
-import { URLEndPoint } from "../shared/routeNames";
+import { URLEndPoint } from "../shared/auth-modal";
 
 const Cart = () => {
   const carts = useSelector((state: RootState) => state.cart.items);
@@ -40,7 +40,10 @@ const Cart = () => {
       <div className="bg-gray-50 min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Your Cart is Empty</h1>
-          <Link to="/" className="text-blue-500 hover:underline text-lg">
+          <Link
+            to={URLEndPoint.home}
+            className="text-blue-500 hover:underline text-lg"
+          >
             Continue Shopping →
           </Link>
         </div>
@@ -75,7 +78,7 @@ const Cart = () => {
               {/* Info */}
               <div className="flex-1">
                 <Link
-                  to={`/product/${item.id}`}
+                  to={`${URLEndPoint.product}/${item.id}`}
                   className="mt-2 text-lg font-semibold text-blue-800 hover:underline"
                 >
                   <h2 className="mt-2 font-bold text-lg">{item.name}</h2>
@@ -139,7 +142,7 @@ const Cart = () => {
               Proceed to Checkout
             </button>
             <Link
-              to="/"
+              to={URLEndPoint.home}
               className="text-sm text-blue-500 hover:underline text-center block cursor-pointer"
             >
               or Continue Shopping →

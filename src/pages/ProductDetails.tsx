@@ -1,22 +1,14 @@
 import {
   ChevronDownIcon,
   ChevronUpIcon,
-  HeartIcon,
-  StarIcon,
+  StarIcon
 } from "@heroicons/react/24/solid";
-import { use, useEffect, useState } from "react";
-import api from "../services/api";
-import { URLEndPoint } from "../shared/routeNames";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import type { Product } from "./home";
 import QuantityControls from "../components/QuantityControls";
-
-// const images = [
-//   "/images/bag1.png",
-//   "/images/bag2.png",
-//   "/images/bag3.png",
-//   "/images/bag4.png",
-// ];
+import api from "../services/api";
+import { URLEndPoint } from "../shared/auth-modal";
+import type { Product } from "./home";
 
 const ProductDetails = () => {
   const [selectedImg, setSelectedImg] = useState();

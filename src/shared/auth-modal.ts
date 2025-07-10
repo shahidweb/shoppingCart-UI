@@ -3,5 +3,11 @@ export const URLEndPoint = {
   register: "/register",
   home: "/",
   products: "/products",
+  product: "/product",
   cart: "/cart",
+};
+
+export const AuthStorageKeys = {
+  token: "token",
+  user: "user",
 };

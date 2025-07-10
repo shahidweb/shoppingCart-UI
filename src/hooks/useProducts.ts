@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setProducts } from "../redux/slices/productSlice";
 import api from "../services/api";
-import { URLEndPoint } from "../shared/routeNames";
+import { URLEndPoint } from "../shared/auth-modal";
 import type { RootState } from "../redux/store";
 
 export function useProducts() {

@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { setCart } from "../redux/slices/cartSlice";
 import type { RootState } from "../redux/store";
 import api from "../services/api";
-import { Message } from "../shared/alertMessage";
-import { URLEndPoint } from "../shared/routeNames";
+import { URLEndPoint } from "../shared/auth-modal";
+import { NotificationMsg } from "../shared/notification-modal";
 
 type QuantityControlsProps = {
   productId: number;
@@ -33,7 +33,7 @@ const QuantityControls: React.FC<QuantityControlsProps> = ({
   const handleAddToCart = async (isAdd = true) => {
     if (!auth.isLoggedIn) {
       navigate(URLEndPoint.login);
-      alert(Message.loginRequired);
+      alert(NotificationMsg.loginRequired);
       return;
     }
     const qty = isAdd ? quantity + 1 : quantity - 1;
@@ -47,7 +47,7 @@ const QuantityControls: React.FC<QuantityControlsProps> = ({
       fetchCart();
     } catch (err) {
       navigate(URLEndPoint.login);
-      alert(Message.loginRequired);
+      alert(NotificationMsg.loginRequired);
     }
   };
 

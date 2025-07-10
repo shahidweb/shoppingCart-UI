@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import QuantityControls from "./QuantityControls";
+import { URLEndPoint } from "../shared/auth-modal";
 
 interface ProductProps {
   id: number;
@@ -18,7 +19,7 @@ const ProductCard = ({ id, name, price, image, description }: ProductProps) => {
         className="w-full h-48 object-cover rounded"
       />
       <Link
-        to={`/product/${id}`}
+        to={`${URLEndPoint.product}/${id}`}
         className="mt-2 text-lg font-semibold text-blue-800 hover:underline"
       >
         <h2 className="mt-2 font-bold text-lg">{name}</h2>
