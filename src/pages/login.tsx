@@ -7,8 +7,10 @@ import api from "../services/api";
 import { AuthStorageKeys, URLEndPoint } from "../shared/auth-modal";
 import { NotificationMsg } from "../shared/notification-modal";
 import { Link } from "react-router-dom";
+import { useAuthRedirect } from "../hooks/useAuthRedirect";
 
 const Login = () => {
+  useAuthRedirect()
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");

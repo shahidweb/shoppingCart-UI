@@ -5,13 +5,11 @@ import { useAuthRedirect } from "../hooks/useAuthRedirect";
 
 const OrderSuccess = () => {
   useAuthRedirect();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
     const flag = localStorage.getItem("orderSuccess");
     if (!flag) {
       navigate("/");
-    } else {
-      localStorage.removeItem("orderSuccess"); // clear after access
     }
   }, []);
 
