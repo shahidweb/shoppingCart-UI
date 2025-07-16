@@ -14,3 +14,7 @@ export const isValidExpiry = (expiry: string) => {
 
   return true;
 };
+
+export const formatCurrency = (amount: number | string, type = "en-IN") => {
+  return `₹${Number(amount).toLocaleString(type)}.00`;
+};

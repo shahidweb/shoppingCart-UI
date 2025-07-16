@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuthRedirect } from "../hooks/useAuthRedirect";
+import { URLEndPoint } from "../shared/auth-modal";
 
 const OrderSuccess = () => {
   useAuthRedirect();
@@ -9,7 +10,7 @@ const OrderSuccess = () => {
   useEffect(() => {
     const flag = localStorage.getItem("orderSuccess");
     if (!flag) {
-      navigate("/");
+      navigate(URLEndPoint.home);
     }
   }, []);
 
@@ -24,7 +25,7 @@ const OrderSuccess = () => {
           to you shortly.
         </p>
         <Link
-          to="/orders"
+          to={URLEndPoint.ordersHistory}
           className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
         >
           View My Orders

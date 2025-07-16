@@ -9,6 +9,8 @@ import type { RootState } from "../redux/store";
 import api from "../services/api";
 import { calculateCartSummary } from "../shared/CartCal";
 import { isValidExpiry } from "../shared/common-methods";
+import { URLEndPoint } from "../shared/auth-modal";
+import { NotificationMsg } from "../shared/notification-modal";
 
 const Checkout = () => {
   useAuthRedirect();
@@ -26,42 +28,43 @@ const Checkout = () => {
     e.preventDefault();
 
     if (card.length !== 16) {
-      toast.error("Card number must be exactly 16 digits");
+      toast.error(NotificationMsg.cardLength);
       return;
     }
 
     if (cvv.length < 3 || cvv.length > 4) {
-      toast.error("Invalid CVV");
+      toast.error(NotificationMsg.invalidCred);
       return;
     }
     if (!/^\d{2}\/\d{2}$/.test(expiry)) {
-      toast.error("Expiry must be in MM/YY format");
+      toast.error(NotificationMsg.invalidFormated);
       return;
     }
 
     if (!isValidExpiry(expiry)) {
-      toast.error("Expiry date is invalid or in the past");
+      toast.error(NotificationMsg.invalidExpiry);
       return;
     }
 
     try {
       const { totalRounded } = calculateCartSummary(cart);
       const items = cart.map((item) => ({
-        productId: item.id,
+        productId: item.product_id,
+        itemId: item.id,
         quantity: item.quantity,
         price: item.price,
       }));
-      await api.post("/orders", {
+      await api.post(URLEndPoint.orders, {
         address,
         card,
         total: totalRounded,
         items,
       });
 
-      toast.success("Order placed successfully");
+      toast.success(NotificationMsg.orderSuccess);
       dispatch(clearCart());
       localStorage.setItem("orderSuccess", "true");
-      navigate("/order-success");
+      navigate(URLEndPoint.orderSuccess);
     } catch (err) {
       console.error(err);
       toast.error("Checkout failed");
@@ -133,13 +136,12 @@ const Checkout = () => {
           {cardType && (
             <>
               <div className="mt-2 text-sm text-gray-600">
-                Detected Card Type:{" "}
                 <span className="font-medium">{cardType}</span>
               </div>
-              <img
+              {/* <img
                 src={`/icons/${cardType.toLowerCase()}.png`}
                 alt={cardType}
-              />
+              /> */}
             </>
           )}
         </div>

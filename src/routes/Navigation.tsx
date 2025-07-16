@@ -6,7 +6,7 @@ import Cart from "../pages/cart";
 import ProductDetails from "../pages/ProductDetails";
 import Checkout from "../pages/Checkout";
 import OrderSuccess from "../pages/OrderSuccess";
-import Orders from "../pages/Orders";
+import OrderHistory from "../pages/OrderHistory";
 import NotFound from "../pages/NotFound";
 
 function Navigation() {
@@ -20,7 +20,7 @@ function Navigation() {
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/order-success" element={<OrderSuccess />} />
-        <Route path="/orders" element={<Orders />} />
+        <Route path="/order-history" element={<OrderHistory />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
