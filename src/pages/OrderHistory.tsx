@@ -106,7 +106,7 @@ const OrderHistory = () => {
 
             {/* Table Layout */}
             <div className="divide-y text-sm">
-              <div className="grid grid-cols-4 text-left px-6 py-2 text-gray-500 font-medium border-b border-gray-200 hover:bg-gray-50">
+              <div className="flex justify-between items-center px-6 py-2 text-gray-500 font-medium border-b border-gray-200 hover:bg-gray-50">
                 <div>Product</div>
                 <div>Price</div>
                 <div>Status</div>
@@ -118,7 +118,7 @@ const OrderHistory = () => {
                 order.items.map((item, j) => (
                   <div
                     key={j}
-                    className="grid grid-cols-4 items-center px-6 py-4 text-sm border-b border-gray-200 hover:bg-gray-50"
+                    className="flex justify-between items-center text-center px-6 py-4 text-sm border-b border-gray-200 hover:bg-gray-50"
                   >
                     {/* Product */}
                     <div className="flex items-center space-x-4">
