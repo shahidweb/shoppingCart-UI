@@ -37,7 +37,12 @@ function CartPage({ onPageChange }: { onPageChange: (page: number) => void }) {
   }, [carts, products]);
 
   if (items.length === 0) {
-    return <EmptyPage text="Your Cart is Empty" />;
+    return (
+      <EmptyPage
+        text="Your Cart is Empty"
+        description="Add products while you shop, so they'll be ready for checkout later."
+      />
+    );
   }
 
   const { subtotal, tax, delivery, savings, totalRounded } =

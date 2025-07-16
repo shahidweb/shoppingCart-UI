@@ -3,10 +3,7 @@ import { URLEndPoint } from "../shared/auth-modal";
 
 const NotFound = () => {
   return (
-    <div
-      className="flex flex-col justify-center items-center bg-gray-50 text-center"
-      style={{ minHeight: "calc(100vh - 60px)" }}
-    >
+    <div className="flex flex-col justify-center items-center bg-gray-50 text-center min-cal-screen">
       <h1 className="text-6xl font-bold text-indigo-600 mb-4">404</h1>
       <p className="text-4xl font-semibold mb-2">Page Not Found</p>
       <p className="text-gray-600 mb-6">
