@@ -1,11 +1,9 @@
-import { toast } from "react-toastify";
-import api from "../services/api";
 import { useEffect, useState } from "react";
-import { useAuthRedirect } from "../hooks/useAuthRedirect";
-import { formatCurrency } from "../shared/common-methods";
-import { URLEndPoint } from "../shared/auth-modal";
-import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import EmptyPage from "../components/EmptyPage";
+import api from "../services/api";
+import { URLEndPoint } from "../shared/auth-modal";
+import { formatCurrency } from "../shared/common-methods";
 
 interface Order {
   id: number;
@@ -21,14 +19,12 @@ interface Order {
 }
 
 const OrderHistory = () => {
-  useAuthRedirect();
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
     const fetchOrders = async () => {
       const res = await api.get(URLEndPoint.orders);
       setOrders(res.data);
-      localStorage.removeItem("orderSuccess");
     };
     fetchOrders();
   }, []);

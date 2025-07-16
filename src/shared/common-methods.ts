@@ -18,3 +18,13 @@ export const isValidExpiry = (expiry: string) => {
 export const formatCurrency = (amount: number | string, type = "en-IN") => {
   return `₹${Number(amount).toLocaleString(type)}.00`;
 };
+
+export const getCardType = (number: string) => {
+  const cleaned = number.replace(/\D/g, "");
+
+  if (/^4/.test(cleaned)) return "Visa";
+  if (/^5[1-5]/.test(cleaned)) return "MasterCard";
+  if (/^3[47]/.test(cleaned)) return "American Express";
+  if (/^6(?:011|5)/.test(cleaned)) return "Discover";
+  return "";
+};

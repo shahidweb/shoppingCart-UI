@@ -11,4 +11,5 @@ export const NotificationMsg = {
   invalidFormated: "Expiry must be in MM/YY format",
   orderSuccess: "Order placed successfully",
   invalidAddress: "Please enter a valid address",
+  emptyCart: "Your cart is empty",
 };

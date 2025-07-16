@@ -18,9 +18,12 @@ const initialState: AuthState = {
   isLoggedIn: false,
 };
 
+const savedAuth = localStorage.getItem("auth");
+const persistedState = savedAuth ? JSON.parse(savedAuth) : initialState;
+
 const authSlice = createSlice({
   name: "auth",
-  initialState,
+  initialState: persistedState,
   reducers: {
     setCredentials: (
       state,
@@ -29,11 +32,13 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isLoggedIn = true;
+      localStorage.setItem("auth", JSON.stringify(state));
     },
     logout: (state) => {
       state.user = null;
       state.token = null;
       state.isLoggedIn = false;
+      localStorage.removeItem("auth");
     },
   },
 });

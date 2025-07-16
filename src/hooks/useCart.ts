@@ -4,6 +4,7 @@ import { setCart } from "../redux/slices/cartSlice";
 import type { RootState } from "../redux/store";
 import api from "../services/api";
 import { URLEndPoint } from "../shared/auth-modal";
+import { toast } from "react-toastify";
 
 export function useCart() {
   const dispatch = useDispatch();
@@ -17,7 +18,10 @@ export function useCart() {
       .then((res) => {
         dispatch(setCart(res.data));
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error("err", err);
+        toast.error(err.message || "Failed to fetch cart");
+      });
   }, [auth, dispatch]);
 
   return carts;

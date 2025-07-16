@@ -1,20 +1,20 @@
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAuthRedirect } from "../hooks/useAuthRedirect";
 import { clearCart } from "../redux/slices/cartSlice";
 import type { RootState } from "../redux/store";
 import api from "../services/api";
-import { calculateCartSummary } from "../shared/CartCal";
-import { isValidExpiry } from "../shared/common-methods";
 import { URLEndPoint } from "../shared/auth-modal";
+import { calculateCartSummary } from "../shared/CartCal";
+import { getCardType, isValidExpiry } from "../shared/common-methods";
 import { NotificationMsg } from "../shared/notification-modal";
 
-const Checkout = () => {
-  useAuthRedirect();
-  const navigate = useNavigate();
+const Checkout = ({
+  onPageChange,
+}: {
+  onPageChange: (page: number) => void;
+}) => {
   const dispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart.items);
   const [address, setAddress] = useState("");
@@ -63,8 +63,7 @@ const Checkout = () => {
 
       toast.success(NotificationMsg.orderSuccess);
       dispatch(clearCart());
-      localStorage.setItem("orderSuccess", "true");
-      navigate(URLEndPoint.orderSuccess);
+      onPageChange(3); // Navigate to order confirmation page
     } catch (err) {
       console.error(err);
       toast.error("Checkout failed");
@@ -96,15 +95,6 @@ const Checkout = () => {
     setCvv(value);
   };
 
-  const getCardType = (number: string) => {
-    const cleaned = number.replace(/\D/g, "");
-
-    if (/^4/.test(cleaned)) return "Visa";
-    if (/^5[1-5]/.test(cleaned)) return "MasterCard";
-    if (/^3[47]/.test(cleaned)) return "American Express";
-    if (/^6(?:011|5)/.test(cleaned)) return "Discover";
-    return "";
-  };
   const cardType = getCardType(card);
 
   return (
