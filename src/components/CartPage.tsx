@@ -9,6 +9,7 @@ import { calculateCartSummary } from "../shared/CartCal";
 import { URLEndPoint } from "../shared/auth-modal";
 import EmptyPage from "./EmptyPage";
 import QuantityControls from "./QuantityControls";
+import { formatCurrency } from "../shared/common-methods";
 
 function CartPage({ onPageChange }: { onPageChange: (page: number) => void }) {
   const carts = useSelector((state: RootState) => state.cart.items);
@@ -99,7 +100,7 @@ function CartPage({ onPageChange }: { onPageChange: (page: number) => void }) {
 
               {/* Price */}
               <div className="text-lg font-bold mt-4 md:mt-0 md:ml-6 text-right w-30">
-                ₹{item.price}
+                {formatCurrency(item.price)}
               </div>
             </div>
           ))}
@@ -112,25 +113,25 @@ function CartPage({ onPageChange }: { onPageChange: (page: number) => void }) {
             <div className="text-sm space-y-2">
               <div className="flex justify-between">
                 <span>Original price</span>
-                <span>₹{subtotal.toFixed(2)}</span>
+                <span>{formatCurrency(subtotal)}</span>
               </div>
               <div className="flex justify-between text-green-600">
                 <span>Savings</span>
-                <span>-₹{savings}</span>
+                <span>-{formatCurrency(savings)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Store Pickup</span>
-                <span>₹{delivery}</span>
+                <span>{formatCurrency(delivery)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Tax</span>
-                <span>₹{tax}</span>
+                <span>{formatCurrency(tax)}</span>
               </div>
             </div>
             <hr />
             <div className="flex justify-between font-bold text-lg">
               <span>Total</span>
-              <span>₹{totalRounded.toLocaleString("en-IN")}.00</span>
+              <span>{formatCurrency(totalRounded)}</span>
             </div>
             <button
               onClick={() => onPageChange(2)}

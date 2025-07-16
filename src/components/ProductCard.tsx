@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import QuantityControls from "./QuantityControls";
 import { URLEndPoint } from "../shared/auth-modal";
+import { formatCurrency } from "../shared/common-methods";
 
 interface ProductProps {
   id: number;
@@ -26,7 +27,9 @@ const ProductCard = ({ id, name, price, image, description }: ProductProps) => {
       </Link>
 
       <p className="text-sm text-gray-600">{description}</p>
-      <p className="mt-1 text-blue-600 font-semibold">₹{price}</p>
+      <p className="mt-1 text-blue-600 font-semibold">
+        {formatCurrency(price)}
+      </p>
       <QuantityControls productId={id} />
     </div>
   );
