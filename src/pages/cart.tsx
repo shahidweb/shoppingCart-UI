@@ -8,6 +8,7 @@ import type { RootState } from "../redux/store";
 import api from "../services/api";
 import { calculateCartSummary } from "../shared/CartCal";
 import { URLEndPoint } from "../shared/auth-modal";
+import EmptyPage from "../components/EmptyPage";
 
 const Cart = () => {
   const carts = useSelector((state: RootState) => state.cart.items);
@@ -37,19 +38,7 @@ const Cart = () => {
   }, [carts, products]);
 
   if (items.length === 0) {
-    return (
-      <div className="bg-gray-50 min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Your Cart is Empty</h1>
-          <Link
-            to={URLEndPoint.home}
-            className="text-blue-500 hover:underline text-lg"
-          >
-            Continue Shopping →
-          </Link>
-        </div>
-      </div>
-    );
+    return <EmptyPage text="Your Cart is Empty" />;
   }
 
   const { subtotal, tax, delivery, savings, totalRounded } =

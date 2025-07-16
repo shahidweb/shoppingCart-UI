@@ -7,7 +7,7 @@ export const URLEndPoint = {
   cart: "/cart",
   checkout: "/checkout",
   orderSuccess: "/order-success",
-  ordersHistory: "/orders-history",
+  ordersHistory: "/order-history",
   orders: "/orders",
   invoice: "/invoice",
 };

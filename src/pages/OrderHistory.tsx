@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useAuthRedirect } from "../hooks/useAuthRedirect";
 import { formatCurrency } from "../shared/common-methods";
 import { URLEndPoint } from "../shared/auth-modal";
+import { Link } from "react-router-dom";
+import EmptyPage from "../components/EmptyPage";
 
 interface Order {
   id: number;
@@ -33,9 +35,12 @@ const OrderHistory = () => {
 
   const downloadInvoice = async (orderId: number) => {
     try {
-      const res = await api.get(`${URLEndPoint.orders}/${orderId}${URLEndPoint.invoice}`, {
-        responseType: "blob", // Get binary data
-      });
+      const res = await api.get(
+        `${URLEndPoint.orders}/${orderId}${URLEndPoint.invoice}`,
+        {
+          responseType: "blob", // Get binary data
+        }
+      );
 
       // Create a download link
       const blob = new Blob([res.data], { type: "application/pdf" });
@@ -53,6 +58,10 @@ const OrderHistory = () => {
       toast.error("Failed to download invoice");
     }
   };
+
+  if (orders.length === 0) {
+    return <EmptyPage text="Your Orders are Empty" />;
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
