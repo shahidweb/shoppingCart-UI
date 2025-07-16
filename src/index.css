@@ -33,5 +33,5 @@ body {
 }
 
 .min-cal-screen {
-  min-height: calc(100vh - 60px) !important;
+  min-height: calc(100vh - 80px) !important;
 }

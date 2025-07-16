@@ -71,7 +71,7 @@ function CartPage({ onPageChange }: { onPageChange: (page: number) => void }) {
     calculateCartSummary(items);
 
   return (
-    <div className="bg-gray-50 min-h-screen pt-6 md:px-12">
+    <div className="bg-gray-50 min-calc-screen px-8 pt-5">
       <h1 className="text-2xl font-bold mb-6">Cart Items </h1>
 
       <div className="flex flex-col lg:flex-row gap-8">

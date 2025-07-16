@@ -65,7 +65,7 @@ const OrderHistory = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
+    <div className="px-8 py-5">
       <h1 className="text-2xl font-bold">Order history</h1>
       <p className="text-gray-500 mb-6">
         Check the status of recent orders, manage returns, and download

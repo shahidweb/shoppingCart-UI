@@ -46,13 +46,13 @@ export default function WishlistPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
+    <div className="px-8 py-5">
       <h2 className="text-2xl font-bold mb-6">Your Wishlist</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {wishlist.map((product) => (
           <div
             key={product.id}
-            className="border rounded-lg p-4 flex flex-col items-center shadow-sm"
+            className="border border-gray-300 rounded-lg p-4 flex flex-col items-center shadow-sm bg-gray-50"
           >
             <img
               src={product.image}
