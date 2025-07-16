@@ -94,9 +94,9 @@ const OrderHistory = () => {
                   </p>
                 </div>
               </div>
-              <div className="mt-4 sm:mt-0">
+              <div className="mt-4 sm:mt-0 bg-white">
                 <button
-                  className="px-4 py-1.5 border rounded hover:bg-gray-50 text-sm cursor-pointer"
+                  className="px-4 py-1.5 border border-gray-300 rounded text-gray-800 hover:bg-gray-50 text-sm cursor-pointer"
                   onClick={() => downloadInvoice(order.id)}
                 >
                   View Invoice
