@@ -31,7 +31,7 @@ const Navbar = () => {
           ? JSON.parse(localStorage.getItem(AuthStorageKeys.user) || "{}")
           : null,
     };
-    if(!(users.token || users.user)) return
+    if (!(users.token || users.user)) return;
     dispatch(setCredentials(users));
   }, []);
 
@@ -52,12 +52,15 @@ const Navbar = () => {
         <Link to={URLEndPoint.home} className="hover:underline">
           Home
         </Link>
-        {auth.user ? (
+        {auth.isLoggedIn ? (
           <>
             <span className="text-sm">
               Hello,{" "}
               <span className="font-bold capitalize">{auth.user.username}</span>
             </span>
+             <Link to={URLEndPoint.ordersHistory} className="hover:underline">
+              Orders
+            </Link>
             <Link to={URLEndPoint.cart} className="hover:underline">
               <ShoppingCartIcon className="inline-block w-6 h-6" />
               <span className="text-white text-xl font-bold">

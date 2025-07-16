@@ -5,4 +5,11 @@ export const NotificationMsg = {
   logOutSuccess: "Logout Successfully!",
   LoginFailed: "Registration failed!",
   RegistrationSuccess: "Registration Successfully!",
+  cardLength: "Card number must be exactly 16 digits",
+  invalidCvv: "Invalid CVV",
+  invalidExpiry: "Expiry date is invalid or in the past",
+  invalidFormated: "Expiry must be in MM/YY format",
+  orderSuccess: "Order placed successfully",
+  invalidAddress: "Please enter a valid address",
+  emptyCart: "Your cart is empty",
 };

@@ -5,7 +5,11 @@ export const URLEndPoint = {
   products: "/products",
   product: "/product",
   cart: "/cart",
-  checkout:"/checkout"
+  checkout: "/checkout",
+  orderSuccess: "/order-success",
+  ordersHistory: "/order-history",
+  orders: "/orders",
+  invoice: "/invoice",
 };
 
 export const AuthStorageKeys = {
