@@ -7,6 +7,7 @@ import OrderHistory from "../pages/OrderHistory";
 import ProductDetails from "../pages/ProductDetails";
 import Register from "../pages/register";
 import AuthRoutes, { PublicRoutes } from "./AuthRoutes";
+import WishlistPage from "../pages/WishlistPage";
 
 function Navigation() {
   return (
@@ -34,6 +35,14 @@ function Navigation() {
           element={
             <AuthRoutes>
               <Cart />
+            </AuthRoutes>
+          }
+        />
+        <Route
+          path="/wishlist"
+          element={
+            <AuthRoutes>
+              <WishlistPage />
             </AuthRoutes>
           }
         />

@@ -58,7 +58,7 @@ const OrderHistory = () => {
   if (orders.length === 0) {
     return (
       <EmptyPage
-        text="Your Orders are Empty"
+        title="Your Orders are Empty"
         description="No orders have been placed yet."
       />
     );

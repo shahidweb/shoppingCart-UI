@@ -10,6 +10,7 @@ export const URLEndPoint = {
   ordersHistory: "/order-history",
   orders: "/orders",
   invoice: "/invoice",
+  wishlist: "/wishlist",
 };
 
 export const AuthStorageKeys = {

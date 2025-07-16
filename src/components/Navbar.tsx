@@ -1,5 +1,6 @@
 import {
   ArrowLeftStartOnRectangleIcon,
+  HeartIcon,
   ShoppingCartIcon,
 } from "@heroicons/react/24/solid";
 import { useEffect } from "react";
@@ -13,14 +14,18 @@ import { setCart } from "../redux/slices/cartSlice";
 import type { RootState } from "../redux/store";
 import { AuthStorageKeys, URLEndPoint } from "../shared/auth-modal";
 import { NotificationMsg } from "../shared/notification-modal";
+import { useWishlist } from "../hooks/useWish";
+import NotificationBadge from "./NotificationBadge";
 
 const Navbar = () => {
   const auth = useSelector((state: RootState) => state.auth);
   const cart = useSelector((state: RootState) => state.cart.items);
+  const wishlist = useSelector((state: RootState) => state.wishlist.items);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useProducts();
   useCart();
+  useWishlist();
 
   useEffect(() => {
     const users = {
@@ -58,14 +63,20 @@ const Navbar = () => {
               Hello,{" "}
               <span className="font-bold capitalize">{auth.user.username}</span>
             </span>
-             <Link to={URLEndPoint.ordersHistory} className="hover:underline">
+            <Link to={URLEndPoint.ordersHistory} className="hover:underline">
               Orders
             </Link>
             <Link to={URLEndPoint.cart} className="hover:underline">
-              <ShoppingCartIcon className="inline-block w-6 h-6" />
-              <span className="text-white text-xl font-bold">
-                ({cart.length})
-              </span>
+              <NotificationBadge
+                icon={<ShoppingCartIcon className="inline-block w-6 h-6" />}
+                count={cart.length}
+              />
+            </Link>
+            <Link to={URLEndPoint.wishlist} className="hover:underline">
+              <NotificationBadge
+                icon={<HeartIcon className="inline-block w-6 h-6" />}
+                count={wishlist.length}
+              />
             </Link>
             <button
               onClick={() => handleLogout()}
