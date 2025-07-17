@@ -52,21 +52,39 @@ const Navbar = () => {
                   {auth.user?.username}
                 </span>
               </span>
-              <Link to={URLEndPoint.ordersHistory} className="hover:underline">
-                Orders
-              </Link>
-              <Link to={URLEndPoint.cart} className="hover:underline">
-                <NotificationBadge
-                  icon={<ShoppingCartIcon className="inline-block w-6 h-6" />}
-                  count={cart.length}
-                />
-              </Link>
-              <Link to={URLEndPoint.wishlist} className="hover:underline">
-                <NotificationBadge
-                  icon={<HeartIcon className="inline-block w-6 h-6" />}
-                  count={wishlist.length}
-                />
-              </Link>
+              {!auth.isAdmin ? (
+                <>
+                  <Link
+                    to={URLEndPoint.ordersHistory}
+                    className="hover:underline"
+                  >
+                    Orders
+                  </Link>
+                  <Link to={URLEndPoint.cart} className="hover:underline">
+                    <NotificationBadge
+                      icon={
+                        <ShoppingCartIcon className="inline-block w-6 h-6" />
+                      }
+                      count={cart.length}
+                    />
+                  </Link>
+                  <Link to={URLEndPoint.wishlist} className="hover:underline">
+                    <NotificationBadge
+                      icon={<HeartIcon className="inline-block w-6 h-6" />}
+                      count={wishlist.length}
+                    />
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to={URLEndPoint.adminProduct}
+                    className="hover:underline"
+                  >
+                    Products
+                  </Link>
+                </>
+              )}
               <button
                 onClick={() => handleLogout()}
                 className="hover:underline text-red-300 cursor-pointer"

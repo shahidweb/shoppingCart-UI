@@ -1,4 +1,8 @@
 import { Route, Routes } from "react-router-dom";
+import AdminRoute from "../auth/AdminAuth";
+import PublicRoutes from "../auth/PublicAuth";
+import AuthRoutes from "../auth/UserAuth";
+import ProductsPage from "../pages/admin/ProductsPage";
 import Cart from "../pages/Cart";
 import Home from "../pages/home";
 import Login from "../pages/login";
@@ -7,15 +11,15 @@ import OrderHistory from "../pages/OrderHistory";
 import ProductDetails from "../pages/ProductDetails";
 import Register from "../pages/register";
 import WishlistPage from "../pages/WishlistPage";
-import AuthRoutes, { PublicRoutes } from "./AuthRoutes";
+import { URLEndPoint } from "../shared/auth-modal";
 
 function Navigation() {
   return (
     <>
       <Routes>
-        <Route index path="/" element={<Home />} />        
+        <Route index path={URLEndPoint.home} element={<Home />} />
         <Route
-          path="/login"
+          path={URLEndPoint.login}
           element={
             <PublicRoutes>
               <Login />
@@ -23,7 +27,7 @@ function Navigation() {
           }
         />
         <Route
-          path="/register"
+          path={URLEndPoint.register}
           element={
             <PublicRoutes>
               <Register />
@@ -31,7 +35,16 @@ function Navigation() {
           }
         />
         <Route
-          path="/cart"
+          path={URLEndPoint.adminProduct}
+          element={
+            <AdminRoute>
+              <ProductsPage />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path={URLEndPoint.cart}
           element={
             <AuthRoutes>
               <Cart />
@@ -39,7 +52,7 @@ function Navigation() {
           }
         />
         <Route
-          path="/wishlist"
+          path={URLEndPoint.wishlist}
           element={
             <AuthRoutes>
               <WishlistPage />
@@ -47,7 +60,7 @@ function Navigation() {
           }
         />
         <Route
-          path="/product/:id"
+          path={URLEndPoint.product + "/:id"}
           element={
             <AuthRoutes>
               <ProductDetails />
@@ -55,7 +68,7 @@ function Navigation() {
           }
         />
         <Route
-          path="/order-history"
+          path={URLEndPoint.ordersHistory}
           element={
             <AuthRoutes>
               <OrderHistory />

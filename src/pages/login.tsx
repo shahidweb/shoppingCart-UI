@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { setCredentials } from "../redux/slices/authSlice";
 import api from "../services/api";
@@ -9,7 +9,6 @@ import { NotificationMsg } from "../shared/notification-modal";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -18,7 +17,6 @@ const Login = () => {
     try {
       const res = await api.post(URLEndPoint.login, { email, password });
       dispatch(setCredentials(res.data));
-      navigate(URLEndPoint.home);
       toast.success(NotificationMsg.loginSuccess);
     } catch (err: any) {
       toast.error(err.response.data.message || NotificationMsg.invalidCred);

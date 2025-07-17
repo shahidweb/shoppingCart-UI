@@ -11,6 +11,7 @@ export const URLEndPoint = {
   orders: "/orders",
   invoice: "/invoice",
   wishlist: "/wishlist",
+  adminProduct: "/admin/products",
 };
 
 export const AuthKeys = {
