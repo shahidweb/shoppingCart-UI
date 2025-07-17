@@ -13,7 +13,7 @@ export const URLEndPoint = {
   wishlist: "/wishlist",
 };
 
-export const AuthStorageKeys = {
+export const AuthKeys = {
   token: "token",
   user: "user",
 };

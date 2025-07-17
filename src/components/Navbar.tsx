@@ -3,18 +3,17 @@ import {
   HeartIcon,
   ShoppingCartIcon,
 } from "@heroicons/react/24/solid";
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useCart } from "../hooks/useCart";
 import { useProducts } from "../hooks/useProducts";
-import { logout, setCredentials } from "../redux/slices/authSlice";
+import { useWishlist } from "../hooks/useWish";
+import { logout } from "../redux/slices/authSlice";
 import { setCart } from "../redux/slices/cartSlice";
 import type { RootState } from "../redux/store";
-import { AuthStorageKeys, URLEndPoint } from "../shared/auth-modal";
+import { URLEndPoint } from "../shared/auth-modal";
 import { NotificationMsg } from "../shared/notification-modal";
-import { useWishlist } from "../hooks/useWish";
 import NotificationBadge from "./NotificationBadge";
 
 const Navbar = () => {
@@ -26,19 +25,6 @@ const Navbar = () => {
   useProducts();
   useCart();
   useWishlist();
-
-  useEffect(() => {
-    const users = {
-      token: localStorage.getItem(AuthStorageKeys.token) || "",
-      user:
-        localStorage.getItem(AuthStorageKeys.user) &&
-        localStorage.getItem(AuthStorageKeys.user) !== "undefined"
-          ? JSON.parse(localStorage.getItem(AuthStorageKeys.user) || "{}")
-          : null,
-    };
-    if (!(users.token || users.user)) return;
-    dispatch(setCredentials(users));
-  }, []);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -63,7 +49,7 @@ const Navbar = () => {
               <span className="text-md">
                 Hello,{" "}
                 <span className="font-bold capitalize">
-                  {auth.user.username}
+                  {auth.user?.username}
                 </span>
               </span>
               <Link to={URLEndPoint.ordersHistory} className="hover:underline">

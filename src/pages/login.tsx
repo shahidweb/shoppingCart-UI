@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { setCredentials } from "../redux/slices/authSlice";
 import api from "../services/api";
-import { AuthStorageKeys, URLEndPoint } from "../shared/auth-modal";
+import { URLEndPoint } from "../shared/auth-modal";
 import { NotificationMsg } from "../shared/notification-modal";
 
 const Login = () => {
@@ -17,8 +17,6 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await api.post(URLEndPoint.login, { email, password });
-      localStorage.setItem(AuthStorageKeys.token, res.data.token);
-      localStorage.setItem(AuthStorageKeys.user, JSON.stringify(res.data.user));
       dispatch(setCredentials(res.data));
       navigate(URLEndPoint.home);
       toast.success(NotificationMsg.loginSuccess);

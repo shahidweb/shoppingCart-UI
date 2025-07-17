@@ -6,14 +6,14 @@ import NotFound from "../pages/NotFound";
 import OrderHistory from "../pages/OrderHistory";
 import ProductDetails from "../pages/ProductDetails";
 import Register from "../pages/register";
-import AuthRoutes, { PublicRoutes } from "./AuthRoutes";
 import WishlistPage from "../pages/WishlistPage";
+import AuthRoutes, { PublicRoutes } from "./AuthRoutes";
 
 function Navigation() {
   return (
     <>
       <Routes>
-        <Route index path="/" element={<Home />} />
+        <Route index path="/" element={<Home />} />        
         <Route
           path="/login"
           element={
