@@ -6,7 +6,7 @@ import type { RootState } from "../redux/store";
 import api from "../services/api";
 import { URLEndPoint } from "../shared/auth-modal";
 
-function WishlistControl({
+const WishlistControl = ({
   productId,
   isShowText,
   classes,
@@ -14,7 +14,7 @@ function WishlistControl({
   productId: number;
   isShowText: boolean;
   classes?: string;
-}) {
+}) => {
   const wishlist = useSelector((state: RootState) => state.wishlist.items);
   const dispatch = useDispatch();
 
@@ -52,6 +52,6 @@ function WishlistControl({
       )}
     </button>
   );
-}
+};
 
 export default WishlistControl;

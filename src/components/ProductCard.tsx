@@ -20,9 +20,9 @@ const ProductCard = ({ id, name, price, image, description }: ProductProps) => {
         alt={name}
         className="w-full h-48 object-cover rounded"
       />
-      <button className={`absolute top-7 right-7 text-white`}>
+      <div className={`absolute top-7 right-7 text-white`}>
         <WishlistControl productId={id} isShowText={false} classes="w-8 h-8" />
-      </button>
+      </div>
       <Link
         to={`${URLEndPoint.product}/${id}`}
         className="mt-2 text-lg font-semibold text-blue-800 hover:underline"
