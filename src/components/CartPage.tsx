@@ -1,9 +1,8 @@
-import { HeartIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { setCart } from "../redux/slices/cartSlice";
-import { setWishlist } from "../redux/slices/wishSlice";
 import type { RootState } from "../redux/store";
 import api from "../services/api";
 import { calculateCartSummary } from "../shared/CartCal";
@@ -11,12 +10,11 @@ import { URLEndPoint } from "../shared/auth-modal";
 import { formatCurrency } from "../shared/common-methods";
 import EmptyPage from "./EmptyPage";
 import QuantityControls from "./QuantityControls";
-import { toast } from "react-toastify";
+import WishlistControl from "./WishlistControl";
 
 function CartPage({ onPageChange }: { onPageChange: (page: number) => void }) {
   const carts = useSelector((state: RootState) => state.cart.items);
   const products = useSelector((state: RootState) => state.products.items);
-  const wishlist = useSelector((state: RootState) => state.wishlist.items);
   const [items, setItems] = useState<any[]>([]);
   const dispatch = useDispatch();
 
@@ -24,20 +22,6 @@ function CartPage({ onPageChange }: { onPageChange: (page: number) => void }) {
     await api.delete(`${URLEndPoint.cart}/${id}`);
     const res = await api.get(URLEndPoint.cart);
     dispatch(setCart(res.data));
-  };
-
-  const addRemoveWishlist = async (product_id: number) => {
-    const isInWishlist = isItemInWishlist(product_id);
-    if (isInWishlist) {
-      await api.delete(`${URLEndPoint.wishlist}/${product_id}`);
-    } else {
-      await api.post(URLEndPoint.wishlist, { productId: product_id });
-    }
-    toast.success(
-      isInWishlist ? "Removed from Favorites" : "Added to Favorites"
-    );
-    const res = await api.get(URLEndPoint.wishlist);
-    dispatch(setWishlist(res.data));
   };
 
   useEffect(() => {
@@ -55,6 +39,9 @@ function CartPage({ onPageChange }: { onPageChange: (page: number) => void }) {
     setItems(getCartItems);
   }, [carts, products]);
 
+  const { subtotal, tax, delivery, savings, totalRounded } =
+    calculateCartSummary(items);
+
   if (items.length === 0) {
     return (
       <EmptyPage
@@ -63,12 +50,6 @@ function CartPage({ onPageChange }: { onPageChange: (page: number) => void }) {
       />
     );
   }
-
-  const isItemInWishlist = (product_id: number) =>
-    wishlist.some((item) => item.id === product_id);
-
-  const { subtotal, tax, delivery, savings, totalRounded } =
-    calculateCartSummary(items);
 
   return (
     <div className="bg-gray-50 min-calc-screen px-8 pt-5">
@@ -102,17 +83,10 @@ function CartPage({ onPageChange }: { onPageChange: (page: number) => void }) {
                 <h2 className="text-sm">{item.description}</h2>
 
                 <div className="flex items-center gap-4 text-sm mt-3 text-gray-500">
-                  <button
-                    className={`flex items-center gap-1 hover:text-blue-600 cursor-pointer ${
-                      isItemInWishlist(item.product_id) ? "text-blue-600" : ""
-                    }`}
-                    onClick={() => addRemoveWishlist(item.product_id)}
-                  >
-                    <HeartIcon className="w-4 h-4" />
-                    {isItemInWishlist(item.product_id)
-                      ? "Remove from Favorites"
-                      : "Add to Favorites"}
-                  </button>
+                  <WishlistControl
+                    productId={item.product_id}
+                    isShowText={true}
+                  />
                   <button
                     className="flex items-center gap-1 hover:text-red-600 cursor-pointer"
                     onClick={() => removeItem(item.id)}

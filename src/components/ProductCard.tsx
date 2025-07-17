@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import QuantityControls from "./QuantityControls";
 import { URLEndPoint } from "../shared/auth-modal";
 import { formatCurrency } from "../shared/common-methods";
+import QuantityControls from "./QuantityControls";
+import WishlistControl from "./WishlistControl";
 
 interface ProductProps {
   id: number;
@@ -13,12 +14,15 @@ interface ProductProps {
 
 const ProductCard = ({ id, name, price, image, description }: ProductProps) => {
   return (
-    <div className="bg-white shadow-md rounded p-4 flex flex-col justify-between">
+    <div className="bg-white shadow-md rounded p-4 flex flex-col justify-between relative">
       <img
         src={image || "https://via.placeholder.com/200"}
         alt={name}
         className="w-full h-48 object-cover rounded"
       />
+      <button className={`absolute top-7 right-7 text-white`}>
+        <WishlistControl productId={id} isShowText={false} classes="w-8 h-8" />
+      </button>
       <Link
         to={`${URLEndPoint.product}/${id}`}
         className="mt-2 text-lg font-semibold text-blue-800 hover:underline"
