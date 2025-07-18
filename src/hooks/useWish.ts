@@ -12,7 +12,7 @@ export function useWishlist() {
   const wishlist = useSelector((state: RootState) => state.wishlist.items);
 
   useEffect(() => {
-    if (!auth.isLoggedIn || wishlist.length > 0) return;
+    if (!auth.isLoggedIn || auth.isAdmin || wishlist.length > 0) return;
     api
       .get(URLEndPoint.wishlist)
       .then((res) => {

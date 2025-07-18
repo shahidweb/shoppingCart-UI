@@ -7,6 +7,7 @@ import type { RootState } from "../redux/store";
 import api from "../services/api";
 import { URLEndPoint } from "../shared/auth-modal";
 import { NotificationMsg } from "../shared/notification-modal";
+import { toast } from "react-toastify";
 
 type QuantityControlsProps = {
   productId: number;
@@ -33,7 +34,7 @@ const QuantityControls: React.FC<QuantityControlsProps> = ({
   const handleAddToCart = async (isAdd = true) => {
     if (!auth.isLoggedIn) {
       navigate(URLEndPoint.login);
-      alert(NotificationMsg.loginRequired);
+      toast.error(NotificationMsg.loginRequired);
       return;
     }
     const qty = isAdd ? quantity + 1 : quantity - 1;
@@ -47,7 +48,7 @@ const QuantityControls: React.FC<QuantityControlsProps> = ({
       fetchCart();
     } catch (err) {
       navigate(URLEndPoint.login);
-      alert(NotificationMsg.loginRequired);
+      toast.error(NotificationMsg.loginRequired);
     }
   };
 
@@ -92,13 +93,15 @@ const QuantityControls: React.FC<QuantityControlsProps> = ({
             <PlusIcon className="w-5 h-5 text-gray-700" />
           </button>
         </div>
-      ) : (
+      ) : !auth.isAdmin ? (
         <button
           className="mt-3 bg-blue-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-600"
           onClick={() => handleAddToCart()}
         >
           Add to Cart
         </button>
+      ) : (
+        <></>
       )}
     </>
   );

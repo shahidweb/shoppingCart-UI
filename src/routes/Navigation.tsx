@@ -1,83 +1,71 @@
-import { Route, Routes } from "react-router-dom";
-import AdminRoute from "../auth/AdminAuth";
-import PublicRoutes from "../auth/PublicAuth";
-import AuthRoutes from "../auth/UserAuth";
-import ProductsPage from "../pages/admin/ProductsPage";
-import Cart from "../pages/Cart";
+import { Routes, Route } from "react-router-dom";
+import ProtectedRoute from "../auth/ProtectedRoute";
+
 import Home from "../pages/home";
 import Login from "../pages/login";
-import NotFound from "../pages/NotFound";
-import OrderHistory from "../pages/OrderHistory";
-import ProductDetails from "../pages/ProductDetails";
 import Register from "../pages/register";
+import ProductsPage from "../pages/admin/ProductsPage";
+import Cart from "../pages/Cart";
 import WishlistPage from "../pages/WishlistPage";
+import ProductDetails from "../pages/ProductDetails";
+import OrderHistory from "../pages/OrderHistory";
+import NotFound from "../pages/NotFound";
 import { URLEndPoint } from "../shared/auth-modal";
 
 function Navigation() {
   return (
-    <>
-      <Routes>
-        <Route index path={URLEndPoint.home} element={<Home />} />
-        <Route
-          path={URLEndPoint.login}
-          element={
-            <PublicRoutes>
-              <Login />
-            </PublicRoutes>
-          }
-        />
-        <Route
-          path={URLEndPoint.register}
-          element={
-            <PublicRoutes>
-              <Register />
-            </PublicRoutes>
-          }
-        />
-        <Route
-          path={URLEndPoint.adminProduct}
-          element={
-            <AdminRoute>
-              <ProductsPage />
-            </AdminRoute>
-          }
-        />
+    <Routes>
+      <Route index path={URLEndPoint.home} element={<Home />} />
+      <Route path={URLEndPoint.login} element={<Login />} />
+      <Route path={URLEndPoint.register} element={<Register />} />
 
-        <Route
-          path={URLEndPoint.cart}
-          element={
-            <AuthRoutes>
-              <Cart />
-            </AuthRoutes>
-          }
-        />
-        <Route
-          path={URLEndPoint.wishlist}
-          element={
-            <AuthRoutes>
-              <WishlistPage />
-            </AuthRoutes>
-          }
-        />
-        <Route
-          path={URLEndPoint.product + "/:id"}
-          element={
-            <AuthRoutes>
-              <ProductDetails />
-            </AuthRoutes>
-          }
-        />
-        <Route
-          path={URLEndPoint.ordersHistory}
-          element={
-            <AuthRoutes>
-              <OrderHistory />
-            </AuthRoutes>
-          }
-        />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </>
+      <Route
+        path={URLEndPoint.adminProduct}
+        element={
+          <ProtectedRoute role="admin">
+            <ProductsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path={URLEndPoint.cart}
+        element={
+          <ProtectedRoute>
+            <Cart />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path={URLEndPoint.wishlist}
+        element={
+          <ProtectedRoute>
+            <WishlistPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path={URLEndPoint.product + "/:id"}
+        element={
+          <ProtectedRoute>
+            <ProductDetails />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path={URLEndPoint.ordersHistory}
+        element={
+          <ProtectedRoute>
+            <OrderHistory />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 

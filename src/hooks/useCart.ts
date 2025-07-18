@@ -12,7 +12,7 @@ export function useCart() {
   const carts = useSelector((state: RootState) => state.cart.items);
 
   useEffect(() => {
-    if (!auth.isLoggedIn || carts.length > 0) return;
+    if (!auth.isLoggedIn || auth.isAdmin|| carts.length > 0) return;
     api
       .get(URLEndPoint.cart)
       .then((res) => {

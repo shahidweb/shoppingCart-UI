@@ -5,6 +5,7 @@ interface User {
   id: number;
   username: string;
   email: string;
+  role: "user" | "admin";
 }
 const AdminRole = {
   admin: "admin",

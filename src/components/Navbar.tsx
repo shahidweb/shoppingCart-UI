@@ -34,8 +34,8 @@ const Navbar = () => {
     dispatch(clearProduct());
     dispatch(clearWishlist());
     localStorage.clear();
-    toast.success(NotificationMsg.logOutSuccess);
     navigate(URLEndPoint.login);
+    toast.success(NotificationMsg.logOutSuccess);
   };
 
   return (
