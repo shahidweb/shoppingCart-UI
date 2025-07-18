@@ -87,6 +87,12 @@ const Navbar = () => {
                   >
                     Products
                   </Link>
+                  <Link
+                    to={URLEndPoint.adminOrder}
+                    className="hover:underline"
+                  >
+                    Orders
+                  </Link>
                 </>
               )}
               <button
