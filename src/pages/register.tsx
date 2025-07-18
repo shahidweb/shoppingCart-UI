@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { setCredentials } from "../redux/slices/authSlice";
 import api from "../services/api";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { URLEndPoint } from "../shared/auth-modal";
 import { NotificationMsg } from "../shared/notification-modal";
-import { AuthStorageKeys, URLEndPoint } from "../shared/auth-modal";
-import { Link } from "react-router-dom";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -23,8 +22,6 @@ const Register = () => {
         email,
         password,
       });
-      localStorage.setItem(AuthStorageKeys.token, res.data.token);
-      localStorage.setItem(AuthStorageKeys.user, JSON.stringify(res.data.user));
       dispatch(setCredentials(res.data));
       navigate(URLEndPoint.home);
       toast.success(NotificationMsg.RegistrationSuccess);
@@ -34,7 +31,7 @@ const Register = () => {
   };
 
   return (
-    <div className="flex" style={{ minHeight: "calc(100vh - 3.3rem)" }}>
+    <div className="flex min-cal-screen">
       {/* Left Side Form */}
       <div className="w-full md:w-1/2 flex flex-col justify-center px-8 md:px-24 lg:px-32">
         <div className="max-w-md w-full mx-auto">

@@ -4,31 +4,29 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { setCredentials } from "../redux/slices/authSlice";
 import api from "../services/api";
-import { AuthStorageKeys, URLEndPoint } from "../shared/auth-modal";
+import { URLEndPoint } from "../shared/auth-modal";
 import { NotificationMsg } from "../shared/notification-modal";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const res = await api.post(URLEndPoint.login, { email, password });
-      localStorage.setItem(AuthStorageKeys.token, res.data.token);
-      localStorage.setItem(AuthStorageKeys.user, JSON.stringify(res.data.user));
       dispatch(setCredentials(res.data));
-      navigate(URLEndPoint.home);
       toast.success(NotificationMsg.loginSuccess);
+      navigate(URLEndPoint.home);
     } catch (err: any) {
       toast.error(err.response.data.message || NotificationMsg.invalidCred);
     }
   };
 
   return (
-    <div className="flex" style={{ minHeight: "calc(100vh - 3.3rem)" }}>
+    <div className="flex min-cal-screen">
       {/* Left Side Form */}
       <div className="w-full md:w-1/2 flex flex-col justify-center px-8 md:px-24 lg:px-32">
         <div className="max-w-md w-full mx-auto">

@@ -1,18 +1,36 @@
 import { Link } from "react-router-dom";
 import { URLEndPoint } from "../shared/auth-modal";
+import { ShoppingBagIcon } from "@heroicons/react/24/solid";
 
-function EmptyPage({ text }: { text?: string }) {
+function EmptyPage({
+  title,
+  description,
+  isButton = true,
+}: {
+  title?: string;
+  description?: string;
+  isButton?: boolean;
+}) {
   return (
-    <div className="bg-gray-50 min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold mb-4">{text}</h1>
+    <div
+      className={`flex flex-col items-center justify-center py-20 text-center ${
+        isButton ? "min-cal-screen" : ""
+      }`}
+    >
+      <div className="w-16 h-16 mb-4 text-indigo-600">
+        <ShoppingBagIcon className="w-full h-full" />
+      </div>
+      <h2 className="text-xl font-semibold text-gray-800 mb-2">{title}</h2>
+      <p className="text-gray-500 mb-6">{description}</p>
+      {isButton && (
         <Link
           to={URLEndPoint.home}
-          className="text-blue-500 hover:underline text-lg"
+          className="inline-flex items-center gap-2 px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
         >
-          Continue Shopping →
+          Start shopping
+          <span className="ml-1">→</span>
         </Link>
-      </div>
+      )}
     </div>
   );
 }

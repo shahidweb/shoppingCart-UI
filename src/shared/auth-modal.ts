@@ -10,9 +10,11 @@ export const URLEndPoint = {
   ordersHistory: "/order-history",
   orders: "/orders",
   invoice: "/invoice",
+  wishlist: "/wishlist",
+  adminProduct: "/admin/products",
 };
 
-export const AuthStorageKeys = {
+export const AuthKeys = {
   token: "token",
   user: "user",
 };

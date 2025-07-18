@@ -16,7 +16,9 @@ export const isValidExpiry = (expiry: string) => {
 };
 
 export const formatCurrency = (amount: number | string, type = "en-IN") => {
-  return `₹${Number(amount).toLocaleString(type)}.00`;
+  return Number(amount.toString().split(".")[1]) > 0
+    ? `₹${Number(amount).toLocaleString(type)}`
+    : `₹${Number(amount).toLocaleString(type)}.00`;
 };
 
 export const getCardType = (number: string) => {

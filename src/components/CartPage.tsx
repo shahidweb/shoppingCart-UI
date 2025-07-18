@@ -1,4 +1,4 @@
-import { HeartIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -7,14 +7,16 @@ import type { RootState } from "../redux/store";
 import api from "../services/api";
 import { calculateCartSummary } from "../shared/CartCal";
 import { URLEndPoint } from "../shared/auth-modal";
+import { formatCurrency } from "../shared/common-methods";
 import EmptyPage from "./EmptyPage";
 import QuantityControls from "./QuantityControls";
+import WishlistControl from "./WishlistControl";
 
 function CartPage({ onPageChange }: { onPageChange: (page: number) => void }) {
   const carts = useSelector((state: RootState) => state.cart.items);
   const products = useSelector((state: RootState) => state.products.items);
-  const dispatch = useDispatch();
   const [items, setItems] = useState<any[]>([]);
+  const dispatch = useDispatch();
 
   const removeItem = async (id: number) => {
     await api.delete(`${URLEndPoint.cart}/${id}`);
@@ -29,22 +31,28 @@ function CartPage({ onPageChange }: { onPageChange: (page: number) => void }) {
       );
       if (!product) return null;
       return {
-        ...cart,
         ...product,
+        ...cart,
       };
     });
+
     setItems(getCartItems);
   }, [carts, products]);
-
-  if (items.length === 0) {
-    return <EmptyPage text="Your Cart is Empty" />;
-  }
 
   const { subtotal, tax, delivery, savings, totalRounded } =
     calculateCartSummary(items);
 
+  if (items.length === 0) {
+    return (
+      <EmptyPage
+        title="Your Cart is Empty"
+        description="Add products while you shop, so they'll be ready for checkout later."
+      />
+    );
+  }
+
   return (
-    <div className="bg-gray-50 min-h-screen pt-6 md:px-12">
+    <div className="bg-gray-50 min-calc-screen px-8 pt-5">
       <h1 className="text-2xl font-bold mb-6">Cart Items </h1>
 
       <div className="flex flex-col lg:flex-row gap-8">
@@ -75,10 +83,10 @@ function CartPage({ onPageChange }: { onPageChange: (page: number) => void }) {
                 <h2 className="text-sm">{item.description}</h2>
 
                 <div className="flex items-center gap-4 text-sm mt-3 text-gray-500">
-                  <button className="flex items-center gap-1 hover:text-blue-600 cursor-pointer">
-                    <HeartIcon className="w-4 h-4" />
-                    Add to Favorites
-                  </button>
+                  <WishlistControl
+                    productId={item.product_id}
+                    isShowText={true}
+                  />
                   <button
                     className="flex items-center gap-1 hover:text-red-600 cursor-pointer"
                     onClick={() => removeItem(item.id)}
@@ -94,7 +102,7 @@ function CartPage({ onPageChange }: { onPageChange: (page: number) => void }) {
 
               {/* Price */}
               <div className="text-lg font-bold mt-4 md:mt-0 md:ml-6 text-right w-30">
-                ₹{item.price}
+                {formatCurrency(item.price)}
               </div>
             </div>
           ))}
@@ -107,25 +115,25 @@ function CartPage({ onPageChange }: { onPageChange: (page: number) => void }) {
             <div className="text-sm space-y-2">
               <div className="flex justify-between">
                 <span>Original price</span>
-                <span>₹{subtotal.toFixed(2)}</span>
+                <span>{formatCurrency(subtotal)}</span>
               </div>
               <div className="flex justify-between text-green-600">
                 <span>Savings</span>
-                <span>-₹{savings}</span>
+                <span>-{formatCurrency(savings)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Store Pickup</span>
-                <span>₹{delivery}</span>
+                <span>{formatCurrency(delivery)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Tax</span>
-                <span>₹{tax}</span>
+                <span>{formatCurrency(tax)}</span>
               </div>
             </div>
             <hr />
             <div className="flex justify-between font-bold text-lg">
               <span>Total</span>
-              <span>₹{totalRounded.toLocaleString("en-IN")}.00</span>
+              <span>{formatCurrency(totalRounded)}</span>
             </div>
             <button
               onClick={() => onPageChange(2)}

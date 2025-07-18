@@ -1,15 +1,8 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-
-interface Products {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  description: string;
-}
+import type { IProduct } from "../../shared/interfaces";
 
 interface ProductsState {
-  items: Products[];
+  items: IProduct[];
 }
 
 const initialState: ProductsState = {
@@ -20,11 +13,38 @@ const productSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
-    setProducts: (state, action: PayloadAction<Products[]>) => {
+    setProducts: (state, action: PayloadAction<IProduct[]>) => {
       state.items = action.payload;
+    },
+    addProduct: (state, action: PayloadAction<IProduct>) => {
+      const id = state.items.length
+        ? state.items[state.items.length - 1].id + 1
+        : 1;
+      state.items.push({ ...action.payload, id });
+    },
+    updateProduct: (state, action: PayloadAction<IProduct>) => {
+      const index = state.items.findIndex(
+        (item) => item.id === action.payload.id
+      );
+      if (index !== -1) {
+        state.items[index] = action.payload;
+      }
+    },
+    deleteProduct: (state, action: PayloadAction<number>) => {
+      state.items = state.items.filter((item) => item.id !== action.payload);
+    },
+
+    clearProduct: (state) => {
+      state.items = [];
     },
   },
 });
 
-export const { setProducts } = productSlice.actions;
+export const {
+  setProducts,
+  addProduct,
+  updateProduct,
+  deleteProduct,
+  clearProduct,
+} = productSlice.actions;
 export default productSlice.reducer;

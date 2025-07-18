@@ -31,3 +31,7 @@ body {
   font-style: normal;
   font-size: 16px;
 }
+
+.min-cal-screen {
+  min-height: calc(100vh - 80px) !important;
+}

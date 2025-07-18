@@ -1,44 +1,58 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { AuthKeys } from "../../shared/auth-modal";
 
 interface User {
   id: number;
   username: string;
   email: string;
+  role: "user" | "admin";
 }
+const AdminRole = {
+  admin: "admin",
+};
 
 interface AuthState {
   user: User | null;
   token: string | null;
   isLoggedIn?: boolean;
+  isAdmin?: boolean;
 }
 
 const initialState: AuthState = {
   user: null,
   token: null,
   isLoggedIn: false,
+  isAdmin: false,
 };
 
-const savedAuth = localStorage.getItem("auth");
-const persistedState = savedAuth ? JSON.parse(savedAuth) : initialState;
+const token = localStorage.getItem(AuthKeys.token) || "";
+if (token) {
+  const { exp, iat, ...user } = JSON.parse(atob(token.split(".")[1]));
+  initialState.user = user;
+  initialState.token = token;
+  initialState.isLoggedIn = true;
+  initialState.isAdmin = user.role === AdminRole.admin;
+}
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: persistedState,
+  initialState: initialState,
   reducers: {
-    setCredentials: (
-      state,
-      action: PayloadAction<{ user: User; token: string }>
-    ) => {
-      state.user = action.payload.user;
-      state.token = action.payload.token;
-      state.isLoggedIn = true;
-      localStorage.setItem("auth", JSON.stringify(state));
+    setCredentials: (state, action: PayloadAction<{ token: string }>) => {
+      const token = action.payload.token;
+      const { exp, iat, ...user } = JSON.parse(atob(token.split(".")[1]));
+      state.token = token;
+      state.user = user;
+      state.isLoggedIn = token ? true : false;
+      state.isAdmin = user.role === AdminRole.admin;
+      localStorage.setItem(AuthKeys.token, token);
     },
     logout: (state) => {
       state.user = null;
       state.token = null;
       state.isLoggedIn = false;
-      localStorage.removeItem("auth");
+      state.isAdmin = false;
+      localStorage.clear();
     },
   },
 });
