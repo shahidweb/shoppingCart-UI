@@ -12,4 +12,9 @@ export const NotificationMsg = {
   orderSuccess: "Order placed successfully",
   invalidAddress: "Please enter a valid address",
   emptyCart: "Your cart is empty",
+  productAdded: "Product added successfully",
+  productUpdated: "Product updated successfully",
+  productDeleted: "Product deleted successfully",
+  productNotFound: "Product not found",
+  productExists: "Product already exists",
 };

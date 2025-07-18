@@ -15,6 +15,8 @@ import type { RootState } from "../redux/store";
 import { URLEndPoint } from "../shared/auth-modal";
 import { NotificationMsg } from "../shared/notification-modal";
 import NotificationBadge from "./NotificationBadge";
+import { clearProduct } from "../redux/slices/productSlice";
+import { clearWishlist } from "../redux/slices/wishSlice";
 
 const Navbar = () => {
   const auth = useSelector((state: RootState) => state.auth);
@@ -22,13 +24,15 @@ const Navbar = () => {
   const wishlist = useSelector((state: RootState) => state.wishlist.items);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  useProducts();
   useCart();
   useWishlist();
+  useProducts();
 
   const handleLogout = () => {
     dispatch(logout());
     dispatch(setCart([]));
+    dispatch(clearProduct());
+    dispatch(clearWishlist());
     localStorage.clear();
     toast.success(NotificationMsg.logOutSuccess);
     navigate(URLEndPoint.login);
