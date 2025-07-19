@@ -11,10 +11,16 @@ import {
   getStatusColor,
 } from "../../shared/common-methods";
 import { EyeIcon } from "@heroicons/react/24/solid";
+import OrderDetailsModal from "../../components/admin/OrderDetailsModal";
+import type { OrderItem } from "../../shared/interfaces";
+import { toast } from "react-toastify";
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
   const [search, setSearch] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
+  const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
 
   const tableHeaders = [
     "Order ID",
@@ -57,6 +63,25 @@ export default function OrdersPage() {
       }
     );
     fetchOrders();
+  };
+
+  const handleViewClick = async (orderId: number) => {
+    try {
+      const res = await api.get(
+        `${URLEndPoint.adminOrder}/${orderId}${URLEndPoint.items}`
+      );
+      setOrderItems(res.data);
+      setSelectedOrderId(orderId);
+      setShowModal(true);
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.message || "ERR_BAD_REQUEST");
+    }
+  };
+  const handleViewClose = () => {
+    setOrderItems([]);
+    setSelectedOrderId(null);
+    setShowModal(false);
   };
 
   useEffect(() => {
@@ -134,6 +159,7 @@ export default function OrdersPage() {
                           >
                             {paymentStatus.map((payment) => (
                               <option
+                                key={payment}
                                 className={`cursor-pointer ${getPaymentColor(
                                   payment
                                 )}`}
@@ -161,6 +187,7 @@ export default function OrdersPage() {
                           >
                             {orderStatus.map((order) => (
                               <option
+                                key={order}
                                 className={`cursor-pointer ${getStatusColor(
                                   order
                                 )}`}
@@ -172,7 +199,10 @@ export default function OrdersPage() {
                           </select>
                         </td>
                         <td>
-                          <button className="flex justify-between items-center text-blue-700 hover:bg-blue-700 hover:text-white border py-2 px-3 rounded-lg ml-2 cursor-pointer">
+                          <button
+                            onClick={() => handleViewClick(item.id)}
+                            className="flex justify-between items-center text-blue-700 hover:bg-blue-700 hover:text-white border py-2 px-3 rounded-lg ml-2 cursor-pointer"
+                          >
                             <EyeIcon className="h-4 w-4 inline" />
                             <span className="ps-1">View</span>
                           </button>
@@ -191,11 +221,17 @@ export default function OrdersPage() {
             </div>
             <div className="p-4">
               <p className="text-gray-500">
-                Total Products: {filteredOrders.length}
+                Total Orders: {filteredOrders.length}
               </p>
             </div>
           </div>
         </div>
+        <OrderDetailsModal
+          open={showModal}
+          onClose={() => handleViewClose()}
+          items={orderItems}
+          orderId={selectedOrderId || 0}
+        />
       </section>
     </React.Fragment>
   );
