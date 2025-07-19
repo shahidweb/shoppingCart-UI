@@ -50,14 +50,14 @@ const Navbar = () => {
           </Link>
           {auth.isLoggedIn ? (
             <>
-              <span className="text-md">
-                Hello,{" "}
-                <span className="font-bold capitalize">
-                  {auth.user?.username}
-                </span>
-              </span>
               {!auth.isAdmin ? (
                 <>
+                  <span className="text-md">
+                    Hello,{" "}
+                    <span className="font-bold capitalize">
+                      {auth.user?.username}
+                    </span>
+                  </span>
                   <Link
                     to={URLEndPoint.ordersHistory}
                     className="hover:underline"
@@ -87,12 +87,15 @@ const Navbar = () => {
                   >
                     Products
                   </Link>
-                  <Link
-                    to={URLEndPoint.adminOrder}
-                    className="hover:underline"
-                  >
+                  <Link to={URLEndPoint.adminOrder} className="hover:underline">
                     Orders
                   </Link>
+                  <span className="text-md">
+                    Hello,{" "}
+                    <span className="font-bold capitalize">
+                      {auth.user?.username}
+                    </span>
+                  </span>
                 </>
               )}
               <button
