@@ -12,6 +12,9 @@ export const URLEndPoint = {
   invoice: "/invoice",
   wishlist: "/wishlist",
   adminProduct: "/admin/products",
+  adminOrder: "/admin/orders",
+  paymentStatus: "/payment",
+  items:'/items'
 };
 
 export const AuthKeys = {

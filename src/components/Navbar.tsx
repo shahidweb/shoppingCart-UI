@@ -17,6 +17,7 @@ import { NotificationMsg } from "../shared/notification-modal";
 import NotificationBadge from "./NotificationBadge";
 import { clearProduct } from "../redux/slices/productSlice";
 import { clearWishlist } from "../redux/slices/wishSlice";
+import { clearOrders } from "../redux/slices/orderAdminSlice";
 
 const Navbar = () => {
   const auth = useSelector((state: RootState) => state.auth);
@@ -33,6 +34,7 @@ const Navbar = () => {
     dispatch(setCart([]));
     dispatch(clearProduct());
     dispatch(clearWishlist());
+    dispatch(clearOrders());
     localStorage.clear();
     navigate(URLEndPoint.login);
     toast.success(NotificationMsg.logOutSuccess);
@@ -50,14 +52,14 @@ const Navbar = () => {
           </Link>
           {auth.isLoggedIn ? (
             <>
-              <span className="text-md">
-                Hello,{" "}
-                <span className="font-bold capitalize">
-                  {auth.user?.username}
-                </span>
-              </span>
               {!auth.isAdmin ? (
                 <>
+                  <span className="text-md">
+                    Hello,{" "}
+                    <span className="font-bold capitalize">
+                      {auth.user?.username}
+                    </span>
+                  </span>
                   <Link
                     to={URLEndPoint.ordersHistory}
                     className="hover:underline"
@@ -87,6 +89,15 @@ const Navbar = () => {
                   >
                     Products
                   </Link>
+                  <Link to={URLEndPoint.adminOrder} className="hover:underline">
+                    Orders
+                  </Link>
+                  <span className="text-md">
+                    Hello,{" "}
+                    <span className="font-bold capitalize">
+                      {auth.user?.username}
+                    </span>
+                  </span>
                 </>
               )}
               <button

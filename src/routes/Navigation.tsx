@@ -1,15 +1,16 @@
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "../auth/ProtectedRoute";
 
-import Home from "../pages/home";
-import Login from "../pages/login";
-import Register from "../pages/register";
+import OrdersPage from "../pages/admin/OrdersPage";
 import ProductsPage from "../pages/admin/ProductsPage";
 import Cart from "../pages/Cart";
-import WishlistPage from "../pages/WishlistPage";
-import ProductDetails from "../pages/ProductDetails";
-import OrderHistory from "../pages/OrderHistory";
+import Home from "../pages/home";
+import Login from "../pages/login";
 import NotFound from "../pages/NotFound";
+import OrderHistory from "../pages/OrderHistory";
+import ProductDetails from "../pages/ProductDetails";
+import Register from "../pages/register";
+import WishlistPage from "../pages/WishlistPage";
 import { URLEndPoint } from "../shared/auth-modal";
 
 function Navigation() {
@@ -24,6 +25,14 @@ function Navigation() {
         element={
           <ProtectedRoute role="admin">
             <ProductsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={URLEndPoint.adminOrder}
+        element={
+          <ProtectedRoute role="admin">
+            <OrdersPage />
           </ProtectedRoute>
         }
       />

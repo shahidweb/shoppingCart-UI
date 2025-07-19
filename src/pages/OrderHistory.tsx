@@ -3,14 +3,21 @@ import { toast } from "react-toastify";
 import EmptyPage from "../components/EmptyPage";
 import api from "../services/api";
 import { URLEndPoint } from "../shared/auth-modal";
-import { formatCurrency } from "../shared/common-methods";
+import {
+  formatCurrency,
+  getPaymentColor,
+  getStatusColor,
+} from "../shared/common-methods";
+import { Link } from "react-router-dom";
 
 interface Order {
   id: number;
   total_amount: number;
   created_at: string;
-  delivered_at: string | null;
+  status: string;
+  payment: string;
   items: {
+    id:number;
     product_id: number;
     name: string;
     price: number;
@@ -106,51 +113,61 @@ const OrderHistory = () => {
             </div>
 
             {/* Table Layout */}
-            <div className="divide-y text-sm">
-              <div className="flex justify-between items-center px-6 py-2 text-gray-500 font-medium border-b border-gray-200 hover:bg-gray-50">
-                <div>Product</div>
-                <div>Price</div>
-                <div>Status</div>
-                <div>Info</div>
-              </div>
-
-              {order &&
-                order.items &&
-                order.items.map((item, j) => (
-                  <div
-                    key={j}
-                    className="flex justify-between items-center text-center px-6 py-4 text-sm border-b border-gray-200 hover:bg-gray-50"
-                  >
+            <table className="min-w-full divide-y divide-gray-200 text-sm">
+              <thead className="bg-gray-50 text-gray-500 font-medium text-left">
+                <tr>
+                  <th className="px-6 py-2">Product</th>
+                  <th className="px-6 py-2">Price</th>
+                  <th className="px-6 py-2">Payment</th>
+                  <th className="px-6 py-2">Status</th>
+                  <th className="px-6 py-2 text-end">Info</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {order?.items?.map((item, j) => (
+                  <tr key={j} className="hover:bg-gray-50">
                     {/* Product */}
-                    <div className="flex items-center space-x-4">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-12 h-12 rounded border border-b-gray-100 object-cover"
-                      />
-                      <span className="font-medium text-gray-800">
-                        {item.name}
-                      </span>
-                    </div>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center space-x-4">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-12 h-12 rounded border border-gray-200 object-cover"
+                        />
+                        <span className="font-medium text-gray-800">
+                          {item.name}
+                        </span>
+                      </div>
+                    </td>
 
                     {/* Price */}
-                    <div>{formatCurrency(item.price)}</div>
+                    <td className="px-6 py-4">{formatCurrency(item.price)}</td>
 
                     {/* Status */}
-                    <div className="text-gray-700">
-                      Delivered{" "}
-                      {new Date(
-                        order.delivered_at || order.created_at
-                      ).toDateString()}
-                    </div>
+                    <td className="px-6 py-4">
+                      <span className={`${getPaymentColor(order.payment)}`}>
+                        {order.payment}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`${getStatusColor(order.status)}`}>
+                        {order.status}
+                      </span>
+                    </td>
 
                     {/* Info */}
-                    <div className="text-indigo-600 font-medium hover:underline cursor-pointer">
-                      <a href={`/product/${item.product_id}`}>View Product</a>
-                    </div>
-                  </div>
+                    <td className="px-6 py-4 text-end">
+                      <Link
+                        to={`${URLEndPoint.product}/${item.product_id}`}
+                        className="text-indigo-600 font-medium hover:underline"
+                      >
+                        View Product
+                      </Link>
+                    </td>
+                  </tr>
                 ))}
-            </div>
+              </tbody>
+            </table>
           </div>
         ))}
     </div>

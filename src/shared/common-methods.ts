@@ -21,6 +21,13 @@ export const formatCurrency = (amount: number | string, type = "en-IN") => {
     : `₹${Number(amount).toLocaleString(type)}.00`;
 };
 
+export const formatDateTime = (date: string, type = "en-IN") => {
+  return new Date(date).toLocaleString(type);
+};
+
+export const ellipseText = (text: string, maxLength = 20) =>
+  text.length > maxLength ? `${text.slice(0, maxLength - 3)}...` : text;
+
 export const getCardType = (number: string) => {
   const cleaned = number.replace(/\D/g, "");
 
@@ -29,4 +36,34 @@ export const getCardType = (number: string) => {
   if (/^3[47]/.test(cleaned)) return "American Express";
   if (/^6(?:011|5)/.test(cleaned)) return "Discover";
   return "";
+};
+
+export const getStatusColor = (status: string) => {
+  switch (status.toLowerCase()) {
+    case "pending":
+      return "text-yellow-600";
+    case "processing":
+      return "text-blue-500";
+    case "shipped":
+      return "text-indigo-600";
+    case "delivered":
+      return "text-green-600";
+    case "cancelled":
+      return "text-red-600";
+    default:
+      return "text-gray-500";
+  }
+};
+
+export const getPaymentColor = (status: string) => {
+  switch (status.toLowerCase()) {
+    case "pending":
+      return "text-yellow-900";
+    case "paid":
+      return "text-green-700";
+    case "failed":
+      return "text-red-900";
+    default:
+      return "text-blue-900";
+  }
 };
