@@ -14,13 +14,22 @@ import { EyeIcon } from "@heroicons/react/24/solid";
 import OrderDetailsModal from "../../components/admin/OrderDetailsModal";
 import type { OrderItem } from "../../shared/interfaces";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../../redux/store";
+import {
+  setOrders,
+  updateOrderPayment,
+  updateOrderStatus,
+} from "../../redux/slices/orderAdminSlice";
 
 export default function OrdersPage() {
-  const [orders, setOrders] = useState([]);
+  // const [orders, setOrders] = useState([]);
+  const orders = useSelector((state: RootState) => state.adminOrder.items);
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
+  const dispatch = useDispatch();
 
   const tableHeaders = [
     "Order ID",
@@ -43,7 +52,7 @@ export default function OrdersPage() {
 
   const fetchOrders = async () => {
     const res = await api.get(URLEndPoint.adminOrder);
-    setOrders(res.data);
+    dispatch(setOrders(res.data));
   };
 
   const filteredOrders = orders.filter((item: any) =>
@@ -53,7 +62,7 @@ export default function OrdersPage() {
     await api.put(`${URLEndPoint.adminOrder}/${orderId}`, {
       status: newStatus,
     });
-    fetchOrders();
+    dispatch(updateOrderStatus({ id: orderId, status: newStatus }));
   };
   const updatePaymentStatus = async (orderId: number, newStatus: string) => {
     await api.put(
@@ -62,7 +71,7 @@ export default function OrdersPage() {
         payment: newStatus,
       }
     );
-    fetchOrders();
+    dispatch(updateOrderPayment({ id: orderId, payment: newStatus }));
   };
 
   const handleViewClick = async (orderId: number) => {

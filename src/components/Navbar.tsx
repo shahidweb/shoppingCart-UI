@@ -17,6 +17,7 @@ import { NotificationMsg } from "../shared/notification-modal";
 import NotificationBadge from "./NotificationBadge";
 import { clearProduct } from "../redux/slices/productSlice";
 import { clearWishlist } from "../redux/slices/wishSlice";
+import { clearOrders } from "../redux/slices/orderAdminSlice";
 
 const Navbar = () => {
   const auth = useSelector((state: RootState) => state.auth);
@@ -33,6 +34,7 @@ const Navbar = () => {
     dispatch(setCart([]));
     dispatch(clearProduct());
     dispatch(clearWishlist());
+    dispatch(clearOrders());
     localStorage.clear();
     navigate(URLEndPoint.login);
     toast.success(NotificationMsg.logOutSuccess);
