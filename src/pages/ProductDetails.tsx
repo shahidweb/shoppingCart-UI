@@ -1,14 +1,15 @@
 import {
   ChevronDownIcon,
   ChevronUpIcon,
-  StarIcon
+  StarIcon,
 } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import QuantityControls from "../components/QuantityControls";
 import api from "../services/api";
 import { URLEndPoint } from "../shared/auth-modal";
 import type { Product } from "./home";
+import { tryCatch } from "../utils/apiHandler";
 
 const ProductDetails = () => {
   const [selectedImg, setSelectedImg] = useState();
@@ -17,21 +18,28 @@ const ProductDetails = () => {
   const [expanded, setExpanded] = useState<string | null>(null);
   const [product, setProduct] = useState<Product>();
   const params = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
   const toggleSection = (section: string) => {
     setExpanded((prev) => (prev === section ? null : section));
   };
 
+  const fetchProductData = async () => {
+    const res = await tryCatch(() =>
+      api.get(`${URLEndPoint.products}/s/${params.id}`)
+    );
+    if (res) {
+      setProduct(res.data);
+      setSelectedImg(res.data.image || images[0]);
+      const imageArray = res.data.images || [];
+      setImages(imageArray.length > 0 ? imageArray : [res.data.image]);
+    } else {
+      navigate(URLEndPoint.home);
+    }
+  };
+
   useEffect(() => {
-    api
-      .get(URLEndPoint.products + "/" + params.id)
-      .then((res) => {
-        setProduct(res.data);
-        setSelectedImg(res.data.image || images[0]);
-        const imageArray = res.data.images || [];
-        setImages(imageArray.length > 0 ? imageArray : [res.data.image]);
-      })
-      .catch((err) => console.error(err));
+    fetchProductData();
   }, []);
 
   return (

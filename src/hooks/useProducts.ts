@@ -4,23 +4,23 @@ import { setProducts } from "../redux/slices/productSlice";
 import type { RootState } from "../redux/store";
 import api from "../services/api";
 import { URLEndPoint } from "../shared/auth-modal";
-import { toast } from "react-toastify";
+import { tryCatch } from "../utils/apiHandler";
 
 export function useProducts() {
   const dispatch = useDispatch();
   const products = useSelector((state: RootState) => state.products.items);
 
   useEffect(() => {
-    if (products.length > 0) return;
-    api
-      .get(URLEndPoint.products)
-      .then((res) => {
+    const fetchProducts = async () => {
+      const res = await tryCatch(() => api.get(URLEndPoint.products));
+      if (res) {
         dispatch(setProducts(res.data));
-      })
-      .catch((err) => {
-        console.error("err", err);
-        toast.error(err.message || "Failed to fetch products");
-      });
+      }
+    };
+
+    if (products.length === 0) {
+      fetchProducts();
+    }
   }, [dispatch, products]);
 
   return products;

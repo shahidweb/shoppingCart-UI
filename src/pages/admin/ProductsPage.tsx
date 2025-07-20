@@ -13,6 +13,7 @@ import type { IProduct } from "../../shared/interfaces";
 import { NotificationMsg } from "../../shared/notification-modal";
 import { toast } from "react-toastify";
 import { formatCurrency } from "../../shared/common-methods";
+import { tryCatch } from "../../utils/apiHandler";
 
 export default function ProductPage() {
   const products = useSelector((state: RootState) => state.products.items);
@@ -31,8 +32,8 @@ export default function ProductPage() {
   ];
 
   const fetchProducts = async () => {
-    const res = await api.get(URLEndPoint.adminProduct);
-    dispatch(setProducts(res.data));
+    const res = await tryCatch(() => api.get(URLEndPoint.adminProduct));
+    if (res) dispatch(setProducts(res.data));
   };
 
   const filteredProducts = products.filter((product: IProduct) =>
@@ -40,9 +41,13 @@ export default function ProductPage() {
   );
 
   const dtlProduct = async (id: number) => {
-    await api.delete(`${URLEndPoint.adminProduct}/${id}`);
-    toast.success(NotificationMsg.productDeleted);
-    dispatch(deleteProduct(id));
+    const res = await tryCatch(() =>
+      api.delete(`${URLEndPoint.adminProduct}/${id}`)
+    );
+    if (res) {
+      toast.success(NotificationMsg.productDeleted);
+      dispatch(deleteProduct(id));
+    }
   };
 
   useEffect(() => {
@@ -115,7 +120,9 @@ export default function ProductPage() {
                         <td className="px-4 py-3 max-w-[12rem] truncate">
                           {product.description}
                         </td>
-                        <td className="px-4 py-3">{formatCurrency(product.price)}</td>
+                        <td className="px-4 py-3">
+                          {formatCurrency(product.price)}
+                        </td>
                         <td>
                           <div className="flex justify-end items-center me-5">
                             <button

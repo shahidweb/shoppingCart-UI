@@ -2,11 +2,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import EmptyPage from "../components/EmptyPage";
 import { setCart } from "../redux/slices/cartSlice";
-import { setWishlist } from "../redux/slices/wishSlice";
+import { removeWishList } from "../redux/slices/wishSlice";
 import type { RootState } from "../redux/store";
 import api from "../services/api";
 import { URLEndPoint } from "../shared/auth-modal";
 import { formatCurrency } from "../shared/common-methods";
+import { tryCatch } from "../utils/apiHandler";
 
 export default function WishlistPage() {
   const wishlist = useSelector((state: RootState) => state.wishlist.items);
@@ -14,22 +15,29 @@ export default function WishlistPage() {
   const dispatch = useDispatch();
 
   const removeFromWishlist = async (productId: number) => {
-    try {
-      await api.delete(`${URLEndPoint.wishlist}/${productId}`);
-      const res = await api.get(URLEndPoint.wishlist);
-      dispatch(setWishlist(res.data));
-    } catch (err) {
-      console.error("Error removing item from wishlist", err);
+    const res: any = await tryCatch(() =>
+      api.delete(`${URLEndPoint.wishlist}/${productId}`)
+    );
+    if (res) {
+      dispatch(removeWishList({ id: productId }));
     }
   };
 
-  const addToCart = async (productId: number) => {
-    try {
-      await api.post(URLEndPoint.cart, { productId, quantity: 1 });
-      const res = await api.get(URLEndPoint.cart);
+  const addToCart = async (product: any) => {
+    const added = await tryCatch(
+      () => api.post(URLEndPoint.cart, { productId: product.id, quantity: 1 }),
+      "Failed to add product to cart"
+    );
+
+    if (!added) return;
+
+    const res = await tryCatch(
+      () => api.get(URLEndPoint.cart),
+      "Failed to fetch updated cart"
+    );
+
+    if (res?.data) {
       dispatch(setCart(res.data));
-    } catch (err) {
-      console.error("Error adding item to cart", err);
     }
   };
 
@@ -78,7 +86,7 @@ export default function WishlistPage() {
               </button>
               {!isMatching(product.id) && (
                 <button
-                  onClick={() => addToCart(product.id)}
+                  onClick={() => addToCart(product)}
                   className="px-3 py-1.5 text-sm border rounded hover:bg-gray-100 cursor-pointer"
                 >
                   Add To Cart

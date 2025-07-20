@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
 import { setWishlist } from "../redux/slices/wishSlice";
 import type { RootState } from "../redux/store";
 import api from "../services/api";
 import { URLEndPoint } from "../shared/auth-modal";
+import { tryCatch } from "../utils/apiHandler";
 
 export function useWishlist() {
   const dispatch = useDispatch();
@@ -12,17 +12,17 @@ export function useWishlist() {
   const wishlist = useSelector((state: RootState) => state.wishlist.items);
 
   useEffect(() => {
-    if (!auth.isLoggedIn || auth.isAdmin || wishlist.length > 0) return;
-    api
-      .get(URLEndPoint.wishlist)
-      .then((res) => {
+    const fetchWishlist = async () => {
+      const res = await tryCatch(() => api.get(URLEndPoint.wishlist));
+      if (res) {
         dispatch(setWishlist(res.data));
-      })
-      .catch((err) => {
-        console.error("err", err);
-        toast.error(err.message || "Failed to fetch wishlist");
-      });
-  }, [auth, dispatch]);
+      }
+    };
 
-  return useWishlist;
+    if (auth.isLoggedIn && !auth.isAdmin && wishlist.length === 0) {
+      fetchWishlist();
+    }
+  }, [auth.isLoggedIn, auth.isAdmin, wishlist.length, dispatch]);
+
+  return wishlist;
 }

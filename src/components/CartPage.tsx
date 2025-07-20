@@ -11,6 +11,7 @@ import { formatCurrency } from "../shared/common-methods";
 import EmptyPage from "./EmptyPage";
 import QuantityControls from "./QuantityControls";
 import WishlistControl from "./WishlistControl";
+import { tryCatch } from "../utils/apiHandler";
 
 function CartPage({ onPageChange }: { onPageChange: (page: number) => void }) {
   const carts = useSelector((state: RootState) => state.cart.items);
@@ -19,28 +20,33 @@ function CartPage({ onPageChange }: { onPageChange: (page: number) => void }) {
   const dispatch = useDispatch();
 
   const removeItem = async (id: number) => {
-    await api.delete(`${URLEndPoint.cart}/${id}`);
-    const res = await api.get(URLEndPoint.cart);
-    dispatch(setCart(res.data));
+    const added = await tryCatch(
+      () => api.delete(`${URLEndPoint.cart}/${id}`),
+      "Failed to add product to cart"
+    );
+
+    if (!added) return;
+
+    const res = await tryCatch(
+      () => api.get(URLEndPoint.cart),
+      "Failed to fetch updated cart"
+    );
+
+    if (res?.data) {
+      dispatch(setCart(res.data));
+    }
   };
 
   useEffect(() => {
-    const getCartItems = carts.map((cart) => {
-      const product = products.find(
-        (product) => product.id === cart.product_id
-      );
-      if (!product) return null;
-      return {
-        ...product,
-        ...cart,
-      };
-    });
+    const mergedItems = carts
+      .map((cart) => {
+        const product = products.find((p) => p.id === cart.product_id);
+        return product ? { ...product, ...cart } : null;
+      })
+      .filter((item) => item !== null);
 
-    setItems(getCartItems);
+    setItems(mergedItems as any[]);
   }, [carts, products]);
-
-  const { subtotal, tax, delivery, savings, totalRounded } =
-    calculateCartSummary(items);
 
   if (items.length === 0) {
     return (
@@ -50,6 +56,9 @@ function CartPage({ onPageChange }: { onPageChange: (page: number) => void }) {
       />
     );
   }
+
+  const { subtotal, tax, delivery, savings, totalRounded } =
+    calculateCartSummary(items);
 
   return (
     <div className="bg-gray-50 min-calc-screen px-8 pt-5">

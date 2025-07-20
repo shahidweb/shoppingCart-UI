@@ -6,6 +6,7 @@ import { setCredentials } from "../redux/slices/authSlice";
 import api from "../services/api";
 import { URLEndPoint } from "../shared/auth-modal";
 import { NotificationMsg } from "../shared/notification-modal";
+import { tryCatch } from "../utils/apiHandler";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -16,17 +17,13 @@ const Register = () => {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const res = await api.post(URLEndPoint.register, {
-        username,
-        email,
-        password,
-      });
+    const res = await tryCatch(() =>
+      api.post(URLEndPoint.register, { username, email, password })
+    );
+    if (res) {
       dispatch(setCredentials(res.data));
       navigate(URLEndPoint.home);
       toast.success(NotificationMsg.RegistrationSuccess);
-    } catch (err: any) {
-      toast.error(err.response.data.message || NotificationMsg.LoginFailed);
     }
   };
 
