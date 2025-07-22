@@ -3,6 +3,8 @@ import { URLEndPoint } from "../shared/auth-modal";
 import { formatCurrency } from "../shared/common-methods";
 import QuantityControls from "./QuantityControls";
 import WishlistControl from "./WishlistControl";
+import { useSelector } from "react-redux";
+import type { RootState } from "../redux/store";
 
 interface ProductProps {
   id: number;
@@ -13,6 +15,7 @@ interface ProductProps {
 }
 
 const ProductCard = ({ id, name, price, image, description }: ProductProps) => {
+  const isAdmin = useSelector((state:RootState)=>state.auth.isAdmin)
   return (
     <div className="bg-white shadow-md rounded p-4 flex flex-col justify-between relative">
       <img
@@ -20,9 +23,9 @@ const ProductCard = ({ id, name, price, image, description }: ProductProps) => {
         alt={name}
         className="w-full h-48 object-cover rounded"
       />
-      <div className={`absolute top-7 right-7 text-white`}>
+      {!isAdmin && <div className={`absolute top-7 right-7 text-white`}>
         <WishlistControl productId={id} isShowText={false} classes="w-8 h-8" />
-      </div>
+      </div>}
       <Link
         to={`${URLEndPoint.product}/${id}`}
         className="mt-2 text-lg font-semibold text-blue-800 hover:underline"

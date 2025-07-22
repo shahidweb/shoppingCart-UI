@@ -26,7 +26,7 @@ const ProductDetails = () => {
 
   const fetchProductData = async () => {
     const res = await tryCatch(() =>
-      api.get(`${URLEndPoint.products}/s/${params.id}`)
+      api.get(`${URLEndPoint.products}/${params.id}`)
     );
     if (res) {
       setProduct(res.data);

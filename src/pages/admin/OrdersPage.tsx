@@ -79,7 +79,7 @@ export default function OrdersPage() {
   };
 
   const handleViewClick = async (orderId: number) => {
-    const res: any = tryCatch(
+    const res: any = await tryCatch(
       () => api.get(`${URLEndPoint.adminOrder}/${orderId}${URLEndPoint.items}`),
       "ERR_BAD_REQUEST"
     );

@@ -56,7 +56,7 @@ export default function WishlistPage() {
   return (
     <div className="px-8 py-5">
       <h2 className="text-2xl font-bold mb-6">Your Wishlist</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {wishlist.map((product) => (
           <div
             key={product.id}

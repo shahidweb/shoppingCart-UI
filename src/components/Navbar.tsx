@@ -4,20 +4,20 @@ import {
   ShoppingCartIcon,
 } from "@heroicons/react/24/solid";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useCart } from "../hooks/useCart";
 import { useProducts } from "../hooks/useProducts";
 import { useWishlist } from "../hooks/useWish";
 import { logout } from "../redux/slices/authSlice";
 import { setCart } from "../redux/slices/cartSlice";
+import { clearOrders } from "../redux/slices/orderAdminSlice";
+import { clearProduct } from "../redux/slices/productSlice";
+import { clearWishlist } from "../redux/slices/wishSlice";
 import type { RootState } from "../redux/store";
 import { URLEndPoint } from "../shared/auth-modal";
 import { NotificationMsg } from "../shared/notification-modal";
 import NotificationBadge from "./NotificationBadge";
-import { clearProduct } from "../redux/slices/productSlice";
-import { clearWishlist } from "../redux/slices/wishSlice";
-import { clearOrders } from "../redux/slices/orderAdminSlice";
 
 const Navbar = () => {
   const auth = useSelector((state: RootState) => state.auth);
@@ -43,13 +43,23 @@ const Navbar = () => {
   return (
     <nav className="bg-gray-800 text-white px-8 py-5 sticky top-0 z-50">
       <div className="flex justify-between items-center">
-        <Link to={URLEndPoint.home} className="font-bold text-lg">
+        <NavLink
+          to={URLEndPoint.home}
+          className={({ isActive }) =>
+            `font-bold text-lg ${isActive ? "font-bold" : ""}`
+          }
+        >
           🛒 ShopKart
-        </Link>
+        </NavLink>
         <div className="space-x-4 flex items-center">
-          <Link to={URLEndPoint.home} className="hover:underline">
+          <NavLink
+            to={URLEndPoint.home}
+            className={({ isActive }) =>
+              `hover:underline ${isActive ? "font-bold" : ""}`
+            }
+          >
             Home
-          </Link>
+          </NavLink>
           {auth.isLoggedIn ? (
             <>
               {!auth.isAdmin ? (
@@ -60,38 +70,57 @@ const Navbar = () => {
                       {auth.user?.username}
                     </span>
                   </span>
-                  <Link
+                  <NavLink
                     to={URLEndPoint.ordersHistory}
-                    className="hover:underline"
+                    className={({ isActive }) =>
+                      `hover:underline ${isActive ? "font-bold" : ""}`
+                    }
                   >
                     Orders
-                  </Link>
-                  <Link to={URLEndPoint.cart} className="hover:underline">
+                  </NavLink>
+                  <NavLink
+                    to={URLEndPoint.cart}
+                    className={({ isActive }) =>
+                      `hover:underline ${isActive ? "font-bold" : ""}`
+                    }
+                  >
                     <NotificationBadge
                       icon={
                         <ShoppingCartIcon className="inline-block w-6 h-6" />
                       }
                       count={cart.length}
                     />
-                  </Link>
-                  <Link to={URLEndPoint.wishlist} className="hover:underline">
+                  </NavLink>
+                  <NavLink
+                    to={URLEndPoint.wishlist}
+                    className={({ isActive }) =>
+                      `hover:underline ${isActive ? "font-bold" : ""}`
+                    }
+                  >
                     <NotificationBadge
                       icon={<HeartIcon className="inline-block w-6 h-6" />}
                       count={wishlist.length}
                     />
-                  </Link>
+                  </NavLink>
                 </>
               ) : (
                 <>
-                  <Link
+                  <NavLink
                     to={URLEndPoint.adminProduct}
-                    className="hover:underline"
+                    className={({ isActive }) =>
+                      `hover:underline ${isActive ? "font-bold" : ""}`
+                    }
                   >
                     Products
-                  </Link>
-                  <Link to={URLEndPoint.adminOrder} className="hover:underline">
+                  </NavLink>
+                  <NavLink
+                    to={URLEndPoint.adminOrder}
+                    className={({ isActive }) =>
+                      `hover:underline ${isActive ? "font-bold" : ""}`
+                    }
+                  >
                     Orders
-                  </Link>
+                  </NavLink>
                   <span className="text-md">
                     Hello,{" "}
                     <span className="font-bold capitalize">
@@ -110,15 +139,25 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <Link to={URLEndPoint.login} className="hover:underline">
+              <NavLink
+                to={URLEndPoint.login}
+                className={({ isActive }) =>
+                  `hover:underline ${isActive ? "font-bold" : ""}`
+                }
+              >
                 <button
                   type="button"
                   className="bg-white text-blue-700 font-medium rounded-lg text-sm px-5 py-2 cursor-pointer"
                 >
                   Login
                 </button>
-              </Link>
-              <Link to={URLEndPoint.register} className="hover:underline">
+              </NavLink>
+              <NavLink
+                to={URLEndPoint.register}
+                className={({ isActive }) =>
+                  `hover:underline ${isActive ? "font-bold" : ""}`
+                }
+              >
                 <button
                   type="button"
                   className="py-2 px-4 text-sm font-medium cursor-pointer text-white
@@ -126,7 +165,7 @@ const Navbar = () => {
                 >
                   Register
                 </button>
-              </Link>
+              </NavLink>
             </>
           )}
         </div>
