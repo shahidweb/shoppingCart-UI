@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 
+import { EyeIcon } from "@heroicons/react/24/solid";
+import { useDispatch, useSelector } from "react-redux";
+import OrderDetailsModal from "../../components/admin/OrderDetailsModal";
 import SearchInput from "../../components/SearchInput";
+import {
+  setOrders,
+  updateOrderPayment,
+  updateOrderStatus,
+} from "../../redux/slices/orderAdminSlice";
+import type { RootState } from "../../redux/store";
 import api from "../../services/api";
 import { URLEndPoint } from "../../shared/auth-modal";
 import {
@@ -10,20 +19,10 @@ import {
   getPaymentColor,
   getStatusColor,
 } from "../../shared/common-methods";
-import { EyeIcon } from "@heroicons/react/24/solid";
-import OrderDetailsModal from "../../components/admin/OrderDetailsModal";
 import type { OrderItem } from "../../shared/interfaces";
-import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "../../redux/store";
-import {
-  setOrders,
-  updateOrderPayment,
-  updateOrderStatus,
-} from "../../redux/slices/orderAdminSlice";
+import { tryCatch } from "../../utils/apiHandler";
 
 export default function OrdersPage() {
-  // const [orders, setOrders] = useState([]);
   const orders = useSelector((state: RootState) => state.adminOrder.items);
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -51,42 +50,46 @@ export default function OrdersPage() {
   const paymentStatus = ["Pending", "Paid", "Failed", "Refunded"];
 
   const fetchOrders = async () => {
-    const res = await api.get(URLEndPoint.adminOrder);
-    dispatch(setOrders(res.data));
+    const res = await tryCatch(
+      () => api.get(URLEndPoint.adminOrder),
+      "Failed to fetch orders"
+    );
+    if (res) {
+      dispatch(setOrders(res.data));
+    }
   };
 
   const filteredOrders = orders.filter((item: any) =>
     item["email"].toLowerCase().includes(search.toLowerCase())
   );
   const updateStatus = async (orderId: number, newStatus: string) => {
-    await api.put(`${URLEndPoint.adminOrder}/${orderId}`, {
-      status: newStatus,
-    });
+    await tryCatch(() =>
+      api.put(`${URLEndPoint.adminOrder}/${orderId}`, { status: newStatus })
+    );
     dispatch(updateOrderStatus({ id: orderId, status: newStatus }));
   };
   const updatePaymentStatus = async (orderId: number, newStatus: string) => {
-    await api.put(
-      `${URLEndPoint.adminOrder}/${orderId}${URLEndPoint.paymentStatus}`,
-      {
-        payment: newStatus,
-      }
+    await tryCatch(() =>
+      api.put(
+        `${URLEndPoint.adminOrder}/${orderId}${URLEndPoint.paymentStatus}`,
+        { payment: newStatus }
+      )
     );
     dispatch(updateOrderPayment({ id: orderId, payment: newStatus }));
   };
 
   const handleViewClick = async (orderId: number) => {
-    try {
-      const res = await api.get(
-        `${URLEndPoint.adminOrder}/${orderId}${URLEndPoint.items}`
-      );
+    const res: any = await tryCatch(
+      () => api.get(`${URLEndPoint.adminOrder}/${orderId}${URLEndPoint.items}`),
+      "ERR_BAD_REQUEST"
+    );
+    if (res) {
       setOrderItems(res.data);
       setSelectedOrderId(orderId);
       setShowModal(true);
-    } catch (error: any) {
-      console.log(error);
-      toast.error(error.message || "ERR_BAD_REQUEST");
     }
   };
+
   const handleViewClose = () => {
     setOrderItems([]);
     setSelectedOrderId(null);

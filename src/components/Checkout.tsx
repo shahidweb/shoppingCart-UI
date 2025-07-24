@@ -9,6 +9,7 @@ import { URLEndPoint } from "../shared/auth-modal";
 import { calculateCartSummary } from "../shared/CartCal";
 import { getCardType, isValidExpiry } from "../shared/common-methods";
 import { NotificationMsg } from "../shared/notification-modal";
+import { tryCatch } from "../utils/apiHandler";
 
 const Checkout = ({
   onPageChange,
@@ -31,11 +32,6 @@ const Checkout = ({
       toast.error(NotificationMsg.cardLength);
       return;
     }
-
-    if (cvv.length < 3 || cvv.length > 4) {
-      toast.error(NotificationMsg.invalidCred);
-      return;
-    }
     if (!/^\d{2}\/\d{2}$/.test(expiry)) {
       toast.error(NotificationMsg.invalidFormated);
       return;
@@ -44,29 +40,31 @@ const Checkout = ({
     if (!isValidExpiry(expiry)) {
       toast.error(NotificationMsg.invalidExpiry);
       return;
+    }    
+
+    if (cvv.length <= 3 || cvv.length > 4) {
+      toast.error(NotificationMsg.invalidCvv);
+      return;
     }
 
-    try {
-      const { totalRounded } = calculateCartSummary(cart);
-      const items = cart.map((item) => ({
-        productId: item.product_id,
-        itemId: item.id,
-        quantity: item.quantity,
-        price: item.price,
-      }));
-      await api.post(URLEndPoint.orders, {
-        address,
-        card,
-        total: totalRounded,
-        items,
-      });
-
+    const { totalRounded } = calculateCartSummary(cart);
+    const items = cart.map((item) => ({
+      productId: item.product_id,
+      itemId: item.id,
+      quantity: item.quantity,
+      price: item.price,
+    }));
+    const payload = {
+      address,
+      card,
+      total: totalRounded,
+      items,
+    };
+    const res: any = await tryCatch(() => api.post(URLEndPoint.orders, payload));
+    if (res) {
       toast.success(NotificationMsg.orderSuccess);
       dispatch(clearCart());
-      onPageChange(3); // Navigate to order confirmation page
-    } catch (err) {
-      console.error(err);
-      toast.error("Checkout failed");
+      onPageChange(3);
     }
   };
 

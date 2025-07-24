@@ -17,6 +17,7 @@ const OrderDetailsModal: React.FC<Props> = ({
   orderId,
 }) => {
   if (!open) return null;
+  console.log(items)
 
   return (
     <div className="bg-gray-900/50 flex fixed justify-center items-center md:inset-0">
@@ -43,7 +44,7 @@ const OrderDetailsModal: React.FC<Props> = ({
             </tr>
           </thead>
           <tbody>
-            {items.map((item) => (
+            {items?.map((item) => (
               <tr key={item.id} className="border-t">
                 <td className="p-2 border">{item.name}</td>
                 <td className="p-2 border">{item.quantity}</td>

@@ -8,6 +8,7 @@ import { URLEndPoint } from "../../shared/auth-modal";
 import type { IProduct } from "../../shared/interfaces";
 import { toast } from "react-toastify";
 import { NotificationMsg } from "../../shared/notification-modal";
+import { tryCatch } from "../../utils/apiHandler";
 
 interface CreateProductModalProps {
   product?: IProduct;
@@ -45,14 +46,21 @@ function AddProductModal(props: CreateProductModalProps) {
 
   const onSubmit = async (data: ProductFormInputs) => {
     if (product?.id) {
-      await api.put(`${URLEndPoint.adminProduct}/${product.id}`, data);
-      dispatch(updateProduct({ ...data, id: product.id }));
-      toast.success(NotificationMsg.productUpdated);
+      const res = await tryCatch(() =>
+        api.put(`${URLEndPoint.adminProduct}/${product.id}`, data)
+      );
+      if (res) dispatch(updateProduct({ ...data, id: product.id }));
     } else {
-      await api.post(URLEndPoint.adminProduct, data);
-      dispatch(addProduct({ ...data, id: Date.now() })); // Assuming a new ID is generated
-      toast.success(NotificationMsg.productAdded);
+      const res = await tryCatch(() =>
+        api.post(URLEndPoint.adminProduct, data)
+      );
+      if (res) dispatch(addProduct({ ...data, id: Date.now() })); // Assuming a new ID is generated
     }
+    toast.success(
+      product?.id
+        ? NotificationMsg.productUpdated
+        : NotificationMsg.productAdded
+    );
     onClose();
   };
 

@@ -6,6 +6,7 @@ import { setCredentials } from "../redux/slices/authSlice";
 import api from "../services/api";
 import { URLEndPoint } from "../shared/auth-modal";
 import { NotificationMsg } from "../shared/notification-modal";
+import { tryCatch } from "../utils/apiHandler";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -15,13 +16,13 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const res = await api.post(URLEndPoint.login, { email, password });
+    const res = await tryCatch(() =>
+      api.post(URLEndPoint.login, { email, password })
+    );
+    if (res) {
       dispatch(setCredentials(res.data));
       toast.success(NotificationMsg.loginSuccess);
       navigate(URLEndPoint.home);
-    } catch (err: any) {
-      toast.error(err.response.data.message || NotificationMsg.invalidCred);
     }
   };
 

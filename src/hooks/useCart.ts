@@ -4,7 +4,7 @@ import { setCart } from "../redux/slices/cartSlice";
 import type { RootState } from "../redux/store";
 import api from "../services/api";
 import { URLEndPoint } from "../shared/auth-modal";
-import { toast } from "react-toastify";
+import { tryCatch } from "../utils/apiHandler";
 
 export function useCart() {
   const dispatch = useDispatch();
@@ -12,17 +12,17 @@ export function useCart() {
   const carts = useSelector((state: RootState) => state.cart.items);
 
   useEffect(() => {
-    if (!auth.isLoggedIn || auth.isAdmin|| carts.length > 0) return;
-    api
-      .get(URLEndPoint.cart)
-      .then((res) => {
+    const fetchCart = async () => {
+      const res = await tryCatch(() => api.get(URLEndPoint.cart));
+      if (res) {
         dispatch(setCart(res.data));
-      })
-      .catch((err) => {
-        console.error("err", err);
-        toast.error(err.message || "Failed to fetch cart");
-      });
-  }, [auth, dispatch]);
+      }
+    };
+
+    if (auth.isLoggedIn && !auth.isAdmin && carts.length === 0) {
+      fetchCart();
+    }
+  }, [auth, carts.length, dispatch]);
 
   return carts;
 }

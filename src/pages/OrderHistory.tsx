@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import EmptyPage from "../components/EmptyPage";
 import api from "../services/api";
@@ -8,7 +9,7 @@ import {
   getPaymentColor,
   getStatusColor,
 } from "../shared/common-methods";
-import { Link } from "react-router-dom";
+import { tryCatch } from "../utils/apiHandler";
 
 interface Order {
   id: number;
@@ -17,7 +18,7 @@ interface Order {
   status: string;
   payment: string;
   items: {
-    id:number;
+    id: number;
     product_id: number;
     name: string;
     price: number;
@@ -30,22 +31,21 @@ const OrderHistory = () => {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const res = await api.get(URLEndPoint.orders);
-      setOrders(res.data);
+      const res = await tryCatch(() => api.get(URLEndPoint.orders));
+      if (res) {
+        setOrders(res.data);
+      }
     };
     fetchOrders();
   }, []);
 
   const downloadInvoice = async (orderId: number) => {
-    try {
-      const res = await api.get(
-        `${URLEndPoint.orders}/${orderId}${URLEndPoint.invoice}`,
-        {
-          responseType: "blob", // Get binary data
-        }
-      );
-
-      // Create a download link
+    const res = await tryCatch(() =>
+      api.get(`${URLEndPoint.orders}/${orderId}${URLEndPoint.invoice}`, {
+        responseType: "blob", // Get binary data
+      })
+    );
+    if (res) {
       const blob = new Blob([res.data], { type: "application/pdf" });
       const url = window.URL.createObjectURL(blob);
 
@@ -56,9 +56,6 @@ const OrderHistory = () => {
 
       window.URL.revokeObjectURL(url); // Clean up
       toast.success("Invoice downloaded!");
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to download invoice");
     }
   };
 

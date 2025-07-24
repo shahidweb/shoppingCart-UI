@@ -55,14 +55,7 @@ function Navigation() {
         }
       />
 
-      <Route
-        path={URLEndPoint.product + "/:id"}
-        element={
-          <ProtectedRoute>
-            <ProductDetails />
-          </ProtectedRoute>
-        }
-      />
+      <Route path={URLEndPoint.product + "/:id"} element={<ProductDetails />} />
 
       <Route
         path={URLEndPoint.ordersHistory}

@@ -8,6 +8,7 @@ import api from "../services/api";
 import { URLEndPoint } from "../shared/auth-modal";
 import { NotificationMsg } from "../shared/notification-modal";
 import { toast } from "react-toastify";
+import { tryCatch } from "../utils/apiHandler";
 
 type QuantityControlsProps = {
   productId: number;
@@ -27,8 +28,10 @@ const QuantityControls: React.FC<QuantityControlsProps> = ({
   const dispatch = useDispatch();
 
   const fetchCart = async () => {
-    const res = await api.get(URLEndPoint.cart);
-    dispatch(setCart(res.data));
+    const res = await tryCatch(() => api.get(URLEndPoint.cart));
+    if (res) {
+      dispatch(setCart(res.data));
+    }
   };
 
   const handleAddToCart = async (isAdd = true) => {
@@ -40,16 +43,10 @@ const QuantityControls: React.FC<QuantityControlsProps> = ({
     const qty = isAdd ? quantity + 1 : quantity - 1;
     if (qty < 1) return;
     setQuantity(qty);
-    try {
-      await api.post(URLEndPoint.cart, {
-        productId,
-        quantity: qty,
-      });
-      fetchCart();
-    } catch (err) {
-      navigate(URLEndPoint.login);
-      toast.error(NotificationMsg.loginRequired);
-    }
+    const res = await tryCatch(() =>
+      api.post(URLEndPoint.cart, { productId, quantity: qty })
+    );
+    res ? fetchCart() : navigate(URLEndPoint.login);
   };
 
   useEffect(() => {
@@ -61,8 +58,12 @@ const QuantityControls: React.FC<QuantityControlsProps> = ({
 
   const removeItem = async () => {
     setQuantity(0);
-    await api.delete(`${URLEndPoint.cart}/${itemId}`);
-    fetchCart();
+    const res = await tryCatch(() =>
+      api.delete(`${URLEndPoint.cart}/${itemId}`)
+    );
+    if (res) {
+      fetchCart();
+    }
   };
 
   return (

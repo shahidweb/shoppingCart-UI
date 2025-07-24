@@ -1,9 +1,9 @@
-import { useSelector } from "react-redux";
-import ProductCard from "../components/ProductCard";
-import type { RootState } from "../redux/store";
-import SearchInput from "../components/SearchInput";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import EmptyPage from "../components/EmptyPage";
+import ProductCard from "../components/ProductCard";
+import SearchInput from "../components/SearchInput";
+import type { RootState } from "../redux/store";
 
 export interface Product {
   id: number;

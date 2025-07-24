@@ -5,6 +5,7 @@ import { setWishlist } from "../redux/slices/wishSlice";
 import type { RootState } from "../redux/store";
 import api from "../services/api";
 import { URLEndPoint } from "../shared/auth-modal";
+import { tryCatch } from "../utils/apiHandler";
 
 const WishlistControl = ({
   productId,
@@ -21,15 +22,17 @@ const WishlistControl = ({
   const addRemoveWishlist = async () => {
     const isInWishlist = isItemInWishlist(productId);
     if (isInWishlist) {
-      await api.delete(`${URLEndPoint.wishlist}/${productId}`);
+      await tryCatch(() => api.delete(`${URLEndPoint.wishlist}/${productId}`));
     } else {
-      await api.post(URLEndPoint.wishlist, { productId });
+      await tryCatch(() => api.post(URLEndPoint.wishlist, { productId }));
     }
     toast.success(
       isInWishlist ? "Removed from Favorites" : "Added to Favorites"
     );
-    const res = await api.get(URLEndPoint.wishlist);
-    dispatch(setWishlist(res.data));
+    const res = await tryCatch(() => api.get(URLEndPoint.wishlist));
+    if (res) {
+      dispatch(setWishlist(res.data));
+    }
   };
 
   const isItemInWishlist = (productId: number) =>
