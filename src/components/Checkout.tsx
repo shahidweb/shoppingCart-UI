@@ -60,7 +60,7 @@ const Checkout = ({
       total: totalRounded,
       items,
     };
-    const res: any = tryCatch(() => api.post(URLEndPoint.orders, payload));
+    const res: any = await tryCatch(() => api.post(URLEndPoint.orders, payload));
     if (res) {
       toast.success(NotificationMsg.orderSuccess);
       dispatch(clearCart());
